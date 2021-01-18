@@ -10,14 +10,14 @@ import store from '../redux/store';
 const CLIENT_ID =
     '914272458440-vsme6l876vvcifkqs1fof4j74730k5nr.apps.googleusercontent.com';
 
-// REDUX AUTHENTICATE USER
+// Redux: AUTHENTICATE USER
 function mapDispatchToProps(dispatch) {
     return {
         authenticateUser: user => dispatch(authenticateUser(user))
     };
 }
 
-//SUBSCRIBE the state change
+// Redux: Subscribe the state change
 store.subscribe(() => {
     console.log("Sub" + store.getState().user.isSignedIn);
 });
@@ -34,6 +34,7 @@ class GoogleAuth extends React.Component {
             isSignedIn: false,
         }
 
+        // Binds
         this.login = this.login.bind(this);
         this.handleLoginFailure = this.handleLoginFailure.bind(this);
         this.logout = this.logout.bind(this);
@@ -66,6 +67,7 @@ class GoogleAuth extends React.Component {
 
     render() {
 
+        // Redux: Update Signed in State
         store.subscribe(() => this.setState({ isSignedIn: store.getState().user.isSignedIn }))
 
         return (

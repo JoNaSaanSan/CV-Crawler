@@ -15,6 +15,8 @@ class HeaderComponent extends React.Component {
   }
 
   render() {
+
+    // Redux: Update Signed in State
     store.subscribe(() => this.setState({ isSignedIn: store.getState().user.isSignedIn }))
 
     return (

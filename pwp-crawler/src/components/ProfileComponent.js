@@ -9,12 +9,14 @@ const React = require('react');
 require('./ProfileComponent.css');
 
 
-class SignUpComponent extends React.Component {
+class ProfileComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             checkedB: false,
         }
+
+        // Binds
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     }
 
@@ -25,7 +27,6 @@ class SignUpComponent extends React.Component {
 
 
     render() {
-
         function valuetext(value) {
             return `${value}°C`;
         }
@@ -95,4 +96,4 @@ class SignUpComponent extends React.Component {
 }
 
 const mapStateToProps = state => state.partOfState
-export default connect(mapStateToProps)(SignUpComponent);
+export default connect(mapStateToProps)(ProfileComponent);
