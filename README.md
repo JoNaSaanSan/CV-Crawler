@@ -3,7 +3,7 @@
 Milestone 1:
 
 To Do:
-- [ ] Create Github
+- [x] Create Github
 - [ ] Create React-App 
 - [ ] Databank aufsetzen
 - [ ] Server-side-rendering + next.js/pre-rendereing implementation
