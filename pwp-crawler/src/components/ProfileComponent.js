@@ -20,6 +20,7 @@ class ProfileComponent extends React.Component {
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     }
 
+    // Handles state of checkbox 
     handleCheckboxChange = function (event) {
         this.setState({ ...this.state, [event.target.name]: event.target.checked });
     };
@@ -27,8 +28,10 @@ class ProfileComponent extends React.Component {
 
 
     render() {
+
+        // Value of Slider 
         function valuetext(value) {
-            return `${value}°C`;
+            return `${value}`;
         }
 
         return (

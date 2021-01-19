@@ -31,7 +31,7 @@ class GoogleAuth extends React.Component {
         super(props);
 
         this.state = {
-            isSignedIn: false,
+            isSignedIn: store.getState().user.isSignedIn,
         }
 
         // Binds

@@ -10,7 +10,7 @@ class HeaderComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isSignedIn: false,
+      isSignedIn: store.getState().user.isSignedIn,
     }
   }
 
@@ -33,9 +33,6 @@ class HeaderComponent extends React.Component {
             <Link to="/profile" className="menu-item button">
               Profile </Link> : <Link to="/profile" className="menu-item button">
               Log In </Link>}
-
-
-
         </div>
       </div>
     )
