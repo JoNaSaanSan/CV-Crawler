@@ -45,7 +45,11 @@ function crawl (url) {
         try {
 
             // Launch puppeteer and open URL
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({
+                headless: true,
+                args: ["--disable-setuid-sandbox"],
+                'ignoreHTTPSErrors': true
+            });
             const page = await browser.newPage();
             await page.goto(url);
             console.log(url);
@@ -56,15 +60,15 @@ function crawl (url) {
 
                 // Define which part of the HTML document should be accessed  
                 let items = document.querySelectorAll('body');
-             
+              
                 // Store in Array
                 items.forEach((item) => {
                     results.push({
+                        html: item.innerHTML,
                         text: item.innerText,
                     });
                 });
 
-                console.log(results)
                 return results;
             });
             
