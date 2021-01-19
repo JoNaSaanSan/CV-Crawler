@@ -1,0 +1,42 @@
+import { Link } from 'react-router-dom'
+import store from '../redux/store';
+const React = require('react');
+require('./HeaderComponent.css');
+
+
+store.subscribe(() => store.getState().user.isSignedIn)
+
+class HeaderComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isSignedIn: store.getState().user.isSignedIn,
+    }
+  }
+
+  render() {
+
+    // Redux: Update Signed in State
+    store.subscribe(() => this.setState({ isSignedIn: store.getState().user.isSignedIn }))
+
+    return (
+      <div className="header-view">
+
+        <div id="title-view">
+          CV Crawler
+        </div>
+
+        <div id="account-view">
+          <Link to="/" className="menu-item">
+            Home </Link>
+          {this.state.isSignedIn ?
+            <Link to="/profile" className="menu-item button">
+              Profile </Link> : <Link to="/profile" className="menu-item button">
+              Log In </Link>}
+        </div>
+      </div>
+    )
+  }
+}
+
+export default HeaderComponent;

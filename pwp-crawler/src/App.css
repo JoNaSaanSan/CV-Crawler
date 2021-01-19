@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Mallanna&display=swap');
+
+.App {
+  text-align: center;
+}
+
+body {
+  font-family: 'Mallanna', sans-serif;
+}
+
+body {
+  background-color: rgb(43, 32, 54);
+}
+
+.button {
+  background-color: #dddddd;
+  border: none;
+  color: rgb(0, 0, 0);
+  padding: 16px 16px;
+  text-decoration: none;
+  margin: 6px 6px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+

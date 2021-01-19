@@ -1,0 +1,31 @@
+.header-view {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eeeeee;
+    color: rgb(0, 0, 0);
+    padding: 10px;
+}
+
+#account-view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 20px;
+}
+
+#title-view {
+    font-size: 1.7em;
+}
+
+#account-view>* {
+    margin: 10px;
+}
+
+.menu-item{
+    color: rgb(0, 0, 0);
+    text-decoration: none; /* no underline */
+    cursor: pointer;
+    font-size: 1.2em;
+}

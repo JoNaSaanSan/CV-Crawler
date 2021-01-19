@@ -1,0 +1,30 @@
+#welcome-text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px;
+    font-size: 2em;
+}
+
+.home-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(43, 32, 54);
+  }
+
+  .home-view {
+    display: grid;
+
+    padding: 50px;
+    margin: 30px;
+    background-color: #eeeeee;
+    border-radius: 15px;
+  }
+
+  
+  .home-view>* {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
