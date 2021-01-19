@@ -21,10 +21,37 @@ app.get('/retrieveHTMLRaw', (req, res) => {
     console.log("Received Request")
   })
 
+// Use this request to retrieve get PDF from a website, must still be fetched at client side with axios
+// e.g. curl http://localhost:3001/getHTMLasPDF?url=https://www.google.de
+app.get('/getHTMLasPDF', (req,res) =>{
+    crawl(req.query.url).then(result => res.send(result)).catch(console.error);
+    console.log("Received Request")
+    printPDF(req.query.url).then(result => {res.set({'Content-Type': 'application/pdf', 'Content-Lendth': result.length})
+    res.send(result)})
+})
+
+
 // Start express server  
 app.listen(port, () => {
   console.log(`CV App listening at http://localhost:${port}`)
 })
+
+//prints PDF to mypdf.pdf (is still overwritten everytime)
+async function printPDF(url){
+
+    try{
+    const browser = await puppeteer.launch({headless: true});
+    const page = await browser.newPage();
+    await page.goto(url,{waitUntil: 'networkidle0'});
+    //await page.addStyleTag({content: '.nav {display:none} .navbar {border:0px} '})
+    const pdf = await page.pdf({path:'mypdf.pdf',format: 'A4'});
+    await browser.close();
+    return pdf;
+    
+    } catch(e){
+        console.log('Error', e)
+    }
+}
 
 
 // This function will use puppeteer to extract the data of a website
