@@ -3,8 +3,9 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import { Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { authenticateUser } from '../redux/action'
-import React from 'react';
 import store from '../redux/store';
+import React from 'react';
+
 
 
 const CLIENT_ID =
@@ -16,13 +17,6 @@ function mapDispatchToProps(dispatch) {
         authenticateUser: user => dispatch(authenticateUser(user))
     };
 }
-
-// Redux: Subscribe the state change
-store.subscribe(() => {
-    console.log("Sub" + store.getState().user.isSignedIn);
-});
-
-
 
 class GoogleAuth extends React.Component {
 
@@ -45,7 +39,7 @@ class GoogleAuth extends React.Component {
     login(response) {
         console.log(response)
         if (response.accessToken) {
-            this.props.authenticateUser({ name: response.profileObj.name, accessToken: response.accessToken, isSignedIn: true })
+            this.props.authenticateUser({ name: response.profileObj.name, email: response.profileObj.email, id: response.profileObj.googleId, accessToken: response.accessToken, isSignedIn: true })
         }
     }
 
@@ -53,7 +47,7 @@ class GoogleAuth extends React.Component {
 
     // Handle Log out
     logout(response) {
-        this.props.authenticateUser({ name: '', accessToken: '', isSignedIn: false })
+        this.props.authenticateUser({ name: '', email: '', id:'', accessToken: '', isSignedIn: false })
     }
 
     handleLoginFailure(response) {
