@@ -21,7 +21,7 @@ app.get('/retrieveHTMLRaw', (req, res) => {
     console.log("Received Request")
   })
 
-// Use this request to retrieve get PDF from a website, must still be fetched at client side with axios
+// Use this request to get PDF from a website, must still be fetched at client side with axios
 // e.g. curl http://localhost:3001/getHTMLasPDF?url=https://www.youtube.com
 app.get('/getHTMLasPDF', (req,res) =>{
     printPDF(req.query.url).then(result => {res.set({'Content-Type': 'application/pdf', 'Content-Length': result.length})
