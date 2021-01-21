@@ -22,12 +22,11 @@ app.get('/retrieveHTMLRaw', (req, res) => {
   })
 
 // Use this request to retrieve get PDF from a website, must still be fetched at client side with axios
-// e.g. curl http://localhost:3001/getHTMLasPDF?url=https://www.google.de
+// e.g. curl http://localhost:3001/getHTMLasPDF?url=https://www.youtube.com
 app.get('/getHTMLasPDF', (req,res) =>{
-    crawl(req.query.url).then(result => res.send(result)).catch(console.error);
-    console.log("Received Request")
-    printPDF(req.query.url).then(result => {res.set({'Content-Type': 'application/pdf', 'Content-Lendth': result.length})
-    res.send(result)})
+    printPDF(req.query.url).then(result => {res.set({'Content-Type': 'application/pdf', 'Content-Length': result.length})
+    res.send(result)}).catch(console.error);
+    console.log("Received HTML as PDF request")
 })
 
 
