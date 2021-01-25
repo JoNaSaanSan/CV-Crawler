@@ -6,11 +6,24 @@ const port = 3001
 const puppeteer = require('puppeteer');
 const cors = require('cors');
 
+var cvRouter = require('./routes/cvIO');
+
 app.use(cors());
+
+const mongoose = require('mongoose');
+// 127.0.0.1:27017
+// Change to hostname after following schema: username:pw@host:port/dbname
+mongoose.connect('mongodb://account-management-pwp21:pwp21@localhost/account-management-pwp21', { useNewUrlParser: true, useUnifiedTopology: true });
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    // we're connected!
+});
 
 
 app.get('/', (req, res) => {
-  res.send('connected')
+    res.send('connected')
 })
 
 
@@ -19,16 +32,18 @@ app.get('/', (req, res) => {
 app.get('/retrieveHTMLRaw', (req, res) => {
     crawl(req.query.url).then(result => res.send(result)).catch(console.error);
     console.log("Received Request")
-  })
+})
 
 // Start express server  
 app.listen(port, () => {
-  console.log(`CV App listening at http://localhost:${port}`)
+    console.log(`CV App listening at http://localhost:${port}`)
 })
+
+app.use('/cvIO', cvRouter);
 
 
 // This function will use puppeteer to extract the data of a website
-function crawl (url) {
+function crawl(url) {
 
     // Check if a parameter is passed
     if (!url) {
@@ -38,7 +53,7 @@ function crawl (url) {
     // Check if URL has https if not prefix it ---- Note this can be done better maybe with a library
     if (url.indexOf('://') === -1) {
         url = 'https://' + url
-     }
+    }
 
     // Make new promise
     return new Promise(async (resolve, reject) => {
@@ -60,7 +75,7 @@ function crawl (url) {
 
                 // Define which part of the HTML document should be accessed  
                 let items = document.querySelectorAll('body');
-              
+
                 // Store in Array
                 items.forEach((item) => {
                     results.push({
@@ -71,7 +86,7 @@ function crawl (url) {
 
                 return results;
             });
-            
+
             browser.close();
             return resolve(urls);
         } catch (e) {

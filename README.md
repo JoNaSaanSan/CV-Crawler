@@ -4,10 +4,10 @@ Milestone 1:
 
 To Do:
 - [x] Create Github
-- [ ] Create React-App 
-- [ ] Databank aufsetzen
-- [ ] Server-side-rendering + next.js/pre-rendereing implementation
-- [ ] User Login / Registration (UI) 
+- [x] Create React-App 
+- [x] Databank aufsetzen
+- [x] Server-side-rendering + next.js/pre-rendereing implementation
+- [x] User Login / Registration (UI) 
 - [ ]     Authentication
 - [ ]     URL of CV
 
