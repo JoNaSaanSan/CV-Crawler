@@ -5,6 +5,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Slider from '@material-ui/core/Slider';
 import Divider from '@material-ui/core/Divider';
+import TagsInput from 'react-tagsinput'
+import 'react-tagsinput/react-tagsinput.css'
 const React = require('react');
 require('./ProfileComponent.css');
 
@@ -14,15 +16,45 @@ class ProfileComponent extends React.Component {
         super(props);
         this.state = {
             checkedB: false,
+            keywords: [],
+            emailLimit: 5,
+            newInfo: true
         }
 
         // Binds
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleCheckboxChange = function (event) {
         this.setState({ ...this.state, [event.target.name]: event.target.checked });
+        console.log(this.state.checkedB);
     };
+    
+    //handles Change of the Slieder field 
+    handleSliderChange = (event, newValue) => {
+        this.setState({ emailLimit : newValue});
+        console.log(this.state.emailLimit)
+    };
+
+    //handles Change of the Keywords - ich glaube das Tag Feld was ich hier eingebunden habe wäre praktischer
+    handleChange = (keywords) => {
+        this.setState({keywords})
+        console.log(this.state.keywords)
+    };
+
+    //will handle when Download PDF Button is clicked
+    handleDownload = (event) => {
+    };
+    //will handle Request to Delete all the Data from the database
+    handleDelete = (event) => {
+    };
+    
+    //handles when the save Button is being clicked
+    handleClick = (event) => {
+        this.setState({ ...this.state, [event.target.name]: event.target.value });
+        console.log(this.state.keywords)
+    };   
 
 
 
@@ -30,7 +62,7 @@ class ProfileComponent extends React.Component {
         function valuetext(value) {
             return `${value}°C`;
         }
-
+       
         return (
             <div className="profile-page">
                 <div className="signup-view">
@@ -48,6 +80,10 @@ class ProfileComponent extends React.Component {
                     <Divider variant="middle" />
                     <div className="settings-box">
                         <h2>Settings</h2>
+                        <div>
+                            <Button variant="contained" color="primary" onClick={this.handleDownload}>Download my CV as PDF</Button>
+                        </div>
+                        <div></div>
                         <div id="keywords-textbox">
                             <TextField
                                 id="outlined-multiline-static"
@@ -56,7 +92,10 @@ class ProfileComponent extends React.Component {
                                 rows={4}
                                 defaultValue="Insert Matching Keywords"
                                 variant="outlined"
-                            />  </div>
+                            />  </div>  
+                            <div>
+                            <TagsInput inputProps={{className: 'react-tagsinput-input',placeholder:'Insert Matching Keywords'}} value={this.state.keywords} onChange={this.handleChange} />
+                            </div>
                         <div>
                             <FormControlLabel
                                 control={
@@ -75,6 +114,7 @@ class ProfileComponent extends React.Component {
                         </div>
                         <div>
                             <Slider
+                                name="emailLimit"
                                 defaultValue={5}
                                 getAriaValueText={valuetext}
                                 aria-labelledby="Maximum E-Mails per day"
@@ -83,11 +123,25 @@ class ProfileComponent extends React.Component {
                                 min={0}
                                 max={10}
                                 valueLabelDisplay="auto"
+                                onChangeCommitted={this.handleSliderChange}
+                                
                             />
                         </div>
                         <div>
-                            <Button variant="contained" color="primary">Save</Button>
+                            <Button variant="contained" color="primary" onClick={this.handleClick} >Save</Button>
                         </div>
+                        <div></div>
+                        <Divider id="div" variant="middle"/>
+                        <div></div>
+                        <div>
+                        <div>
+                        <span class="label label-default">Delete all my information.</span>
+                        </div>
+                        <div> 
+                            <Button variant="outline-primary" color="primary" onClick={this.handleDelete}>Delete account</Button> 
+                        </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
