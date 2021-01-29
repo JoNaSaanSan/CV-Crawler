@@ -7,6 +7,7 @@ import Slider from '@material-ui/core/Slider';
 import Divider from '@material-ui/core/Divider';
 import TagsInput from 'react-tagsinput'
 import 'react-tagsinput/react-tagsinput.css'
+import axios from 'axios';
 const React = require('react');
 require('./ProfileComponent.css');
 
@@ -15,8 +16,8 @@ class ProfileComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            checkedB: false,
             keywords: [],
+            getEmail: false,
             emailLimit: 5,
             newInfo: true
         }
@@ -28,7 +29,7 @@ class ProfileComponent extends React.Component {
 
     handleCheckboxChange = function (event) {
         this.setState({ ...this.state, [event.target.name]: event.target.checked });
-        console.log(this.state.checkedB);
+        console.log(this.state.getEmail);
     };
     
     //handles Change of the Slieder field 
@@ -46,14 +47,23 @@ class ProfileComponent extends React.Component {
     //will handle when Download PDF Button is clicked
     handleDownload = (event) => {
     };
+
     //will handle Request to Delete all the Data from the database
     handleDelete = (event) => {
     };
     
-    //handles when the save Button is being clicked
+    //handles when the save Button is being clicked and sends the post request to the server
     handleClick = (event) => {
-        this.setState({ ...this.state, [event.target.name]: event.target.value });
-        console.log(this.state.keywords)
+        console.log(this.state);
+        event.preventDefault();
+        const userSettings = {
+            keywords: this.state.keywords,
+            getEmail: this.state.getEmail,
+            emailLimit: this.state.emailLimit,
+            newInfo: this.state.newInfo
+        }
+        axios.post('http://localhost:3001/settings', userSettings)
+
     };   
 
 
@@ -94,15 +104,18 @@ class ProfileComponent extends React.Component {
                                 variant="outlined"
                             />  </div>  
                             <div>
-                            <TagsInput inputProps={{className: 'react-tagsinput-input',placeholder:'Insert Matching Keywords'}} value={this.state.keywords} onChange={this.handleChange} />
+                            Insert Matching Keywords
+                            </div>
+                            <div>
+                            <TagsInput inputProps={{className: 'react-tagsinput-input',placeholder:'Keywords'}} value={this.state.keywords} onChange={this.handleChange} />
                             </div>
                         <div>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={this.state.checkedB}
+                                        checked={this.state.getEmail}
                                         onChange={this.handleCheckboxChange}
-                                        name="checkedB"
+                                        name="getEmail"
                                         color="primary"
                                     />
                                 }
