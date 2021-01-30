@@ -1,5 +1,6 @@
 import { Button, TextField } from '@material-ui/core';
 import CVComponent from './CVComponent';
+import StackGrid from "react-stack-grid";
 const React = require('react');
 require('./HomeProfilesComponent.css');
 
@@ -13,6 +14,9 @@ class HomeProfilesComponent extends React.Component {
         }
     }
 
+    openPopup(){
+        console.log("div geklickt")
+    }
 
     render() {
         return (
@@ -21,44 +25,44 @@ class HomeProfilesComponent extends React.Component {
                     <button className = "buttons">All Profiles</button>
                     <button className = "buttons">Matched Profiles</button>
                </div>
-               <div className = "cv_container">
-                   <div className = "cv-row">
-                        <div className = "cv-element">
-                            <CVComponent name="Max Mustermann"/>
-                        </div>
-                        <div className = "cv-element">
-                            <CVComponent name="Susanne Meyer"/>
-                        </div>
-                        <div className = "cv-element">
-                            <CVComponent name="Hannes Riegner"/>
-                        </div>
-                        <div className = "cv-element">
-                            <CVComponent name="Sabrina Märtz"/>
-                        </div>
-                        <div className = "cv-element">
-                            <CVComponent name="Marlin Marvin"/>
-                        </div>
+               <StackGrid columnWidth={350}>
+                    <div key="key1" className = "cv-element" onClick={this.openPopup}>
+                        <CVComponent name="Max Mustermann"/>
                     </div>
-
-                    <div className = "cv-row">
-                        <div className = "cv-element">
-                            <CVComponent name="Andreas Schmitz"/>
-                        </div>
-                        <div className = "cv-element">
-                            <CVComponent name="Anna Huber"/>
-                        </div>
-                        <div className = "cv-element">
-                            <CVComponent name="Severin Schrall"/>
-                        </div>
-                        <div className = "cv-element">
-                            <CVComponent name="Sabrina Märtz"/>
-                        </div>
-                        <div className = "cv-element">
-                            <CVComponent name="Marlin Marvin"/>
-                        </div>
+                    <div key="key2" className = "cv-element">
+                        <CVComponent name="Anja Scherer"/>
                     </div>
-                </div>
-
+                    <div key="key3" className = "cv-element">
+                        <CVComponent name="Simon Schmitz"/>
+                    </div>
+                    <div key="key4" className = "cv-element">
+                        <CVComponent name="Anna Huber"/>
+                    </div>
+                    <div key="key5" className = "cv-element">
+                        <CVComponent name="Miriam Schnitz"/>
+                    </div>
+                    <div key="key6" className = "cv-element">
+                        <CVComponent name="Simon Hoffinger"/>
+                    </div>
+                    <div key="key7" className = "cv-element">
+                        <CVComponent name="Thomas Riegner"/>
+                    </div>
+                    <div key="key8" className = "cv-element">
+                        <CVComponent name="Paula Oberacher"/>
+                    </div>
+                    <div key="key9" className = "cv-element">
+                        <CVComponent name="Johannes Niepe"/>
+                    </div>
+                    <div key="key10" className = "cv-element">
+                        <CVComponent name="Andreas Barth"/>
+                    </div>
+                    <div key="key11" className = "cv-element">
+                        <CVComponent name="Veronika Wimmer"/>
+                    </div>
+                    <div key="key12" className = "cv-element">
+                        <CVComponent name="Maximilian Randersdorfer"/>
+                    </div>
+               </StackGrid>
 
             </div>
 
