@@ -1,6 +1,7 @@
 import { Button, TextField } from '@material-ui/core';
 import CVComponent from './CVComponent';
 import StackGrid from "react-stack-grid";
+import profilepic from '../profilepic.png'
 const React = require('react');
 require('./HomeProfilesComponent.css');
 
@@ -15,7 +16,11 @@ class HomeProfilesComponent extends React.Component {
     }
 
     openPopup(){
-        console.log("div geklickt")
+        document.querySelector('.bg-modal').style.display = "flex";
+    }
+
+    closePopup(){
+        document.querySelector('.bg-modal').style.display = "none";
     }
 
     render() {
@@ -25,7 +30,8 @@ class HomeProfilesComponent extends React.Component {
                     <button className = "buttons">All Profiles</button>
                     <button className = "buttons">Matched Profiles</button>
                </div>
-               <StackGrid columnWidth={350}>
+               
+               <StackGrid columnWidth={350} className="stackgrid">
                     <div key="key1" className = "cv-element" onClick={this.openPopup}>
                         <CVComponent name="Max Mustermann"/>
                     </div>
@@ -63,6 +69,18 @@ class HomeProfilesComponent extends React.Component {
                         <CVComponent name="Maximilian Randersdorfer"/>
                     </div>
                </StackGrid>
+
+               <div class="bg-modal">
+                    <div class="modal-contents">
+                        <div class="close" onClick={this.closePopup}>+</div>
+                        <img className="profile-picture" src={profilepic} />
+                        <h1>Max Mustermann</h1>
+                        <p>max.mustermann@gmail.com</p>
+                        <a href="www.google.de">CV Website</a>
+                        <hr/>
+                        <h3>Keywords</h3>
+                    </div>
+                </div>
 
             </div>
 
