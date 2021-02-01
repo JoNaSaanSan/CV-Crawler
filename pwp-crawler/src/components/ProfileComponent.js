@@ -53,7 +53,7 @@ handleDownload = (event) => {
 handleDelete = (event) => {
 };
 
-//loads the users current settings
+//should load the users current settings - not working right yet
 componentDidMount= () =>{
     fetch("/getSettings").then(res =>{
         if(res.ok){
@@ -68,6 +68,7 @@ componentDidMount= () =>{
     console.log(this.state);
 } 
 
+//sends the Logininfo to the backend (by now without Google Auth)
 handleSubmit = (event) =>{
     console.log(this.state);
     event.preventDefault();

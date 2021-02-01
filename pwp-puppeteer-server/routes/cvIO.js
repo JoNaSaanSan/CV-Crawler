@@ -33,6 +33,7 @@ cvIO.get('/saveuser', (req, res) => {
 
 });
 
+//saves the username & cvurl to the database
 cvIO.route('/userLogin').post((req,res) =>{
     const name = req.body.name;
     const cvURL = req.body.url;
@@ -48,7 +49,7 @@ cvIO.route('/userLogin').post((req,res) =>{
             console.log(err);
         })
 })
-
+//saves the other settings to the database
 cvIO.route('/saveSettings').post((req,res) =>{
     const name = req.body.name;
     const cvURL = req.body.url;
@@ -71,7 +72,7 @@ cvIO.route('/saveSettings').post((req,res) =>{
         })
 })
 
-//in progress to update the settings
+//in progress to update the settings when new info is sent
 cvIO.route('/updateSettings').post((req,res) =>{
    // const {url,keywords,emailLimit,newInfo} = req.body
     const name = req.body.name;
