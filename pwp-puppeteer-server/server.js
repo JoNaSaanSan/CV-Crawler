@@ -13,11 +13,12 @@ app.use(cors());
 const mongoose = require('mongoose');
 // 127.0.0.1:27017
 // Change to hostname after following schema: username:pw@host:port/dbname
-mongoose.connect('mongodb://account-management-pwp21:pwp21@localhost/account-management-pwp21', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://account-management:pwp21@127.0.0.1:27017/account-management-pwp21', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
+    console.log("DB connected!")
     // we're connected!
 });
 
