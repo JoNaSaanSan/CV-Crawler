@@ -9,17 +9,21 @@ const cors = require('cors');
 var cvRouter = require('./routes/cvIO');
 
 app.use(cors());
+app.use(express.json());
 
 const mongoose = require('mongoose');
 // 127.0.0.1:27017
 // Change to hostname after following schema: username:pw@host:port/dbname
-mongoose.connect('mongodb://account-management-pwp21:pwp21@localhost/account-management-pwp21', { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect('mongodb://account-management-pwp21:pwp21@localhost/account-management-pwp21', { useNewUrlParser: true, useUnifiedTopology: true });
 
-const db = mongoose.connection;
+/*const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
     // we're connected!
 });
+*/
+//my database, should have access from any ip 
+mongoose.connect("mongodb+srv://iris:iris123@mycluster1.7zdgt.mongodb.net/UserSettings?retryWrites=true&w=majority")
 
 
 app.get('/', (req, res) => {
@@ -39,7 +43,8 @@ app.listen(port, () => {
     console.log(`CV App listening at http://localhost:${port}`)
 })
 
-app.use('/cvIO', cvRouter);
+//app.use('/cvIO', cvRouter);
+app.use("/", cvRouter);
 
 
 // This function will use puppeteer to extract the data of a website

@@ -12,9 +12,11 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
-    emailLimit: Number,
     keywords: [String],
+    emailLimit: Number, 
     newInfo: Boolean
 });
 
-module.exports = mongoose.model('user', userSchema);
+
+const User = mongoose.model('User', userSchema);
+module.exports = User;
