@@ -17,11 +17,15 @@ class HomeProfilesComponent extends React.Component {
 
     openPopup(){
         document.querySelector('.bg-modal').style.display = "flex";
+        document.body.style.overflow = "hidden";
+
     }
 
     closePopup(){
         document.querySelector('.bg-modal').style.display = "none";
+        document.body.style.overflow = "auto";
     }
+    
 
     render() {
         return (
