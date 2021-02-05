@@ -47,10 +47,27 @@ handleTextfieldChange = (event) => {
 
 //will handle when Download PDF Button is clicked
 handleDownload = (event) => {
+    event.preventDefault();
+    const downloadCV = {
+        name: this.state.name,
+        url: this.state.url
+    }
+    axios.post('http://localhost:3001/downloadCV',downloadCV).then(res=>{
+        console.log(res.data)
+    })
 };
 
 //will handle Request to Delete all the Data from the database
 handleDelete = (event) => {
+    console.log(this.state);
+    event.preventDefault();
+    const deleteUser = {
+        name: this.state.name,
+        url: this.state.url
+    }
+    axios.post('http://localhost:3001/deleteUser', deleteUser).then(res=>{
+        console.log(res.data)
+    })
 };
 
 //should load the users current settings - not working right yet
