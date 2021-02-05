@@ -12,6 +12,11 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
+/*    email: {
+        type: String,
+        required: true,
+        unique: true
+ },*/
     keywords: [String],
     emailLimit: Number, 
     newInfo: Boolean

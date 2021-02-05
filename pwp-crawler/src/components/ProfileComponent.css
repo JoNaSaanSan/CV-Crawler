@@ -33,6 +33,10 @@
   width: 80%;
 }
 
+#div {
+  padding: 0;
+}
+
 .react-tagsinput {
   background-color: #fff;
   border: 1px solid #ccc;

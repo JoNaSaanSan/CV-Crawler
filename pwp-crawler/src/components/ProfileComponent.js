@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import Slider from '@material-ui/core/Slider';
 import Divider from '@material-ui/core/Divider';
 import TagsInput from 'react-tagsinput'
+import 'react-tagsinput/react-tagsinput.css'
 import axios from 'axios';
 const React = require('react');
 require('./ProfileComponent.css');
@@ -49,13 +50,18 @@ handleTextfieldChange = (event) => {
 handleDownload = (event) => {
     event.preventDefault();
     const downloadCV = {
-        name: this.state.name,
-        url: this.state.url
-    }
+            name: this.state.name,
+            url: this.state.url,
+            keywords: [],
+            getEmail: false,
+            emailLimit: 5,
+            newInfo: true
+        }
     axios.post('http://localhost:3001/downloadCV',downloadCV).then(res=>{
         console.log(res.data)
     })
 };
+
 
 //will handle Request to Delete all the Data from the database
 handleDelete = (event) => {
@@ -84,6 +90,7 @@ componentDidMount= () =>{
     ));
     console.log(this.state);
 } 
+
 
 //sends the Logininfo to the backend (by now without Google Auth)
 handleSubmit = (event) =>{
@@ -120,7 +127,7 @@ handleClick = (event) => {
         function valuetext(value) {
             return `${value}`;
         }
-
+       
         return (
             <div className="profile-page">
                 <div className="signup-view">
@@ -177,6 +184,7 @@ handleClick = (event) => {
                         <div> 
                             <Button variant="outline-primary" color="primary" onClick={this.handleDelete}>Delete account</Button> 
                         </div>
+                        
                     </div>
                 </div>
             </div>

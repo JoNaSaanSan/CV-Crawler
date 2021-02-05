@@ -10,6 +10,8 @@ var cvRouter = require('./routes/cvIO');
 
 app.use(cors());
 app.use(express.json());
+//app.use('/cvIO', cvRouter);
+app.use("/", cvRouter);
 
 const mongoose = require('mongoose');
 // 127.0.0.1:27017
@@ -19,6 +21,7 @@ const mongoose = require('mongoose');
 /*const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
+    console.log("DB connected!")
     // we're connected!
 });
 */
@@ -43,8 +46,6 @@ app.listen(port, () => {
     console.log(`CV App listening at http://localhost:${port}`)
 })
 
-//app.use('/cvIO', cvRouter);
-app.use("/", cvRouter);
 
 
 // This function will use puppeteer to extract the data of a website
