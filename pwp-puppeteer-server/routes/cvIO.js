@@ -50,53 +50,22 @@ cvIO.route('/userLogin').post((req,res) =>{
         })
 })
 
-//saves the other settings to the database
-cvIO.route('/saveSettings').post((req,res) =>{
-    const name = req.body.name;
-    const cvURL = req.body.url;
-    const keywords = req.body.keywords;
-    const emailLimit = req.body.emailLimit;
-    const newInfo = req.body.newInfo;
-    const newUserSettings = new User({
-        name,
-        cvURL,
-        keywords, 
-        emailLimit,
-        newInfo
-    })
-    newUserSettings.save()
-        .then(newUserSettings =>{
-            res.json({message:"Settings saved successfully"})
-        })
-        .catch(err =>{
-            console.log(err);
-        })
-})
 
-//in progress to update the settings when new info is sent
+//updates the user settings when new info is sent
 cvIO.route('/updateSettings').post((req,res) =>{
    // const {url,keywords,emailLimit,newInfo} = req.body
-    delete req.body._id;
-    //const _id = new ObjectId(req.params.id);
     const name = req.body.name;
     const cvURL = req.body.url;
     const keywords = req.body.keywords;
     const emailLimit = req.body.emailLimit;
     const newInfo = req.body.newInfo;
-    const newUserSettings = new User({
-        name,
-        cvURL,
+    const newUserSettings = { $set:{
         keywords, 
         emailLimit,
         newInfo
-    })
+    }}
     if(newInfo === true){
-        User.findOne({"name" : name},function(err, foundUser){
-            console.log(foundUser.name);
-            console.log(foundUser.keywords);
-            User.updateOne(foundUser, newUserSettings, {overwrite: true});
-            console.log(foundUser.name);
-            console.log(foundUser.keywords);
+        User.findOne({"name" : name, "cvURL": cvURL},function(err, foundUser){
             if(err){
                 console.log(err);
                 res.status(500).send();
@@ -104,13 +73,14 @@ cvIO.route('/updateSettings').post((req,res) =>{
                 if(!foundUser){
                     res.status(404).send();
                 } else{
-                    User.findOneAndUpdate({"name" : name},newUserSettings,{overwrite: true},function(err, result){
-                        if(err){
-                            res.send(err)
-                        }else{
-                            res.send("Updated");
-                    }
-                    })   
+                    User.updateOne(foundUser, newUserSettings, {overwrite: true})
+                        .then(updated =>{
+                            res.json({message:"Settings saved successfully"})
+                        })
+                        .catch(err =>{
+                            console.log(err);
+                        })
+                    
                 }    
             }
             

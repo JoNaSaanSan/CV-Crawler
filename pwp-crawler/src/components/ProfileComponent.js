@@ -6,6 +6,8 @@ import Divider from '@material-ui/core/Divider';
 import TagsInput from 'react-tagsinput'
 import 'react-tagsinput/react-tagsinput.css'
 import axios from 'axios';
+import { saveAs } from 'file-saver';
+import store from '../redux/store';
 const React = require('react');
 require('./ProfileComponent.css');
 
@@ -20,7 +22,10 @@ class ProfileComponent extends React.Component {
             emailLimit: 5,
             newInfo: true,
 
-            currURL: '',
+            loggedIn: false,  //Name & CV-URL submitted
+            isSignedIn: store.getState().user.isSignedIn, //Google Auth Login 
+
+            currURL: '', 
             currKeywords: [],
             currEmailLimit: 5,
         }
@@ -51,15 +56,15 @@ handleDownload = (event) => {
     event.preventDefault();
     const downloadCV = {
             name: this.state.name,
-            url: this.state.url,
-            keywords: [],
-            getEmail: false,
-            emailLimit: 5,
-            newInfo: true
+            url: this.state.url
         }
-    axios.post('http://localhost:3001/downloadCV',downloadCV).then(res=>{
-        console.log(res.data)
-    })
+    axios.post('http://localhost:3001/downloadCV',downloadCV)
+  //  .then(res=>{ console.log(res.data)})
+    .then(() => axios.get('fetch-pdf', { responseType: 'blob' }))
+      .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+        saveAs(pdfBlob, 'myCV.pdf');
+      })
 };
 
 
@@ -103,6 +108,9 @@ handleSubmit = (event) =>{
     axios.post('http://localhost:3001/userLogin',userLogin).then(res=>{
         console.log(res.data)
     })
+    this.setState({
+        loggedIn: true
+    })
 }
 
 
@@ -117,7 +125,9 @@ handleClick = (event) => {
         emailLimit: this.state.emailLimit,
         newInfo: this.state.newInfo
     }
-    axios.post('http://localhost:3001/saveSettings', userSettings)
+    axios.post('http://localhost:3001/updateSettings', userSettings).then(res=>{
+        console.log(res.data)
+    })
 
 };   
 
@@ -145,6 +155,7 @@ handleClick = (event) => {
                         </div>
                     </div>
                     <Divider variant="middle" />
+                    {  this.state.loggedIn ?
                     <div className="settings-box">
                         <h2>Settings</h2>
                         <div>
@@ -187,6 +198,8 @@ handleClick = (event) => {
                         
                     </div>
                 </div>
+                : 
+                <div></div>}
             </div>
         </div>
         )
