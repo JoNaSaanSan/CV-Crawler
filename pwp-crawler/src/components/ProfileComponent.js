@@ -51,16 +51,16 @@ handleTextfieldChange = (event) => {
         })
 };
 
-//will handle when Download PDF Button is clicked
+//handles when Download PDF Button is clicked
 handleDownload = (event) => {
     event.preventDefault();
     const downloadCV = {
             name: this.state.name,
             url: this.state.url
         }
-    axios.post('http://localhost:3001/downloadCV',downloadCV)
-  //  .then(res=>{ console.log(res.data)})
-    .then(() => axios.get('fetch-pdf', { responseType: 'blob' }))
+    axios.post('http://localhost:3001/downloadCV', downloadCV)
+    .then(res=>{ console.log(res.data)})
+    .then(() => axios.get('/fetch-pdf', { responseType: 'blob' }))
       .then((res) => {
         const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
         saveAs(pdfBlob, 'myCV.pdf');
@@ -68,7 +68,7 @@ handleDownload = (event) => {
 };
 
 
-//will handle Request to Delete all the Data from the database
+//handles Request to Delete all the user data from a specific user from the database
 handleDelete = (event) => {
     console.log(this.state);
     event.preventDefault();
@@ -81,7 +81,7 @@ handleDelete = (event) => {
     })
 };
 
-//should load the users current settings - not working right yet
+//should load the users current settings and display them - not working yet
 componentDidMount= () =>{
     fetch("/getSettings").then(res =>{
         if(res.ok){
@@ -97,7 +97,7 @@ componentDidMount= () =>{
 } 
 
 
-//sends the Logininfo to the backend (by now without Google Auth)
+//sends the Login info to the backend (by now without Google Auth)
 handleSubmit = (event) =>{
     console.log(this.state);
     event.preventDefault();
@@ -114,7 +114,7 @@ handleSubmit = (event) =>{
 }
 
 
-//handles when the save Button is being clicked and sends the post request to the server
+//handles when the save Button is being clicked and saves the User settings to the right user 
 handleClick = (event) => {
     console.log(this.state);
     event.preventDefault();
@@ -125,7 +125,7 @@ handleClick = (event) => {
         emailLimit: this.state.emailLimit,
         newInfo: this.state.newInfo
     }
-    axios.post('http://localhost:3001/updateSettings', userSettings).then(res=>{
+    axios.post('http://localhost:3001/updateSettings', userSettings).then(res=>{ //sends the post-request with the user settings
         console.log(res.data)
     })
 

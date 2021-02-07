@@ -50,32 +50,28 @@ app.listen(port, () => {
     console.log(`CV App listening at http://localhost:${port}`)
 })
 
-// Use this request to get PDF from a website, must still be fetched at client side with axios
-// e.g. curl http://localhost:3001/getHTMLasPDF?url=https://www.youtube.com
-app.post('/getHTMLasPDF', (req,res) =>{
-    printPDF(req.query.url).then(result => {res.set({'Content-Type': 'application/pdf', 'Content-Length': result.length})
+// makes a pdf from the users cv Page and sends it back to him
+app.post('/downloadCV', (req,res) =>{
+    const cvURL = req.body.url;
+    printPDF(cvURL).then(result => {res.set({'Content-Type': 'application/pdf', 'Content-Length': result.length})
     res.send(result)}).catch(console.error);
-  /*  if(err) {
-        res.send(Promise.reject());
-    }
-
-    res.send(Promise.resolve());*/
     console.log("Received HTML as PDF request")
 })
 
-app.get('/downloadCV', (req,res) =>{
-    res.sendFile(`${__dirname}/mypdf.pdf`)
+//sends the PDF with the CV back to the Client 
+app.get('/fetch-pdf', (req,res) =>{
+    res.sendFile(`${__dirname}/myCV.pdf`)
 })
 
 
-//prints PDF to mypdf.pdf (is still overwritten everytime)
+//prints PDF to mypdf.pdf (is overwritten everytime)
 async function printPDF(url){
     try{
     const browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
     await page.goto(url,{waitUntil: 'networkidle0'});
     //await page.addStyleTag({content: '.nav {display:none} .navbar {border:0px} '})
-    const pdf = await page.pdf({path:'mypdf.pdf',format: 'A4'});
+    const pdf = await page.pdf({path:'myCV.pdf',format: 'A4'});
     await browser.close();
     return pdf;
     

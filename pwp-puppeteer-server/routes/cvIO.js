@@ -41,13 +41,19 @@ cvIO.route('/userLogin').post((req,res) =>{
         name, 
         cvURL
     })
-    newUser.save()
+    User.findOne({"name" : name},{"cvURL": cvURL},function(err, foundUser){
+        if(foundUser){
+            res.json({message: "User with this name or URL already exists!"});
+        }else{
+            newUser.save()
         .then(newUser =>{
             res.json({message:"User saved successfully"})
         })
         .catch(err =>{
             console.log(err);
-        })
+        })}
+    })
+    
 })
 
 
@@ -92,16 +98,26 @@ cvIO.route('/updateSettings').post((req,res) =>{
 cvIO.route('/deleteUser').post((req,res) =>{
     const name = req.body.name;
     const cvURL = req.body.url;
-    //User.findOneAndDelete({"name" : name, "cvURL": cvURL})
+    
     User.findOne({"name" : name, "cvURL": cvURL},function(err, foundUser){
-    User.deleteOne(foundUser)
-     .then(foundUser =>{
-        res.json({message:"User deleted successfully"})
+        if(err){
+            console.log(err);
+            res.status(500).send();
+        }else{
+            if(!foundUser){
+                res.status(404).send();
+            }else{
+                User.deleteOne(foundUser)
+                 .then(deleted =>{
+                  res.json({message:"User deleted successfully"})
+                      })
+                 .catch(err =>{
+                  console.log(err);
+                 })
+            }
+        }
     })
-     .catch(err =>{
-        console.log(err);
-    })
-})})
+})
 
 
 
