@@ -7,6 +7,7 @@ const cvSchema = new Schema(
             type: String,
             unique: true
         },
+        usrId: Number,
         matchedCVs: [String]
     }
 );

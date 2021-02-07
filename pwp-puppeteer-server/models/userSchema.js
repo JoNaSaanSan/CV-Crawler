@@ -17,6 +17,7 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
+    usrId: Number,
     emailLimit: Number,
     keywords: [String],
     newInfo: Boolean
