@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+const pdf = require('html-pdf');
 
 // Port - change if needed
 const port = 3001
@@ -9,18 +11,26 @@ const cors = require('cors');
 var cvRouter = require('./routes/cvIO');
 
 app.use(cors());
+app.use(express.json());
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.json())
+//app.use('/cvIO', cvRouter);
+app.use("/", cvRouter);
 
 const mongoose = require('mongoose');
 // 127.0.0.1:27017
 // Change to hostname after following schema: username:pw@host:port/dbname
-mongoose.connect('mongodb://account-management:pwp21@127.0.0.1:27017/account-management-pwp21', { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect('mongodb://account-management-pwp21:pwp21@localhost/account-management-pwp21', { useNewUrlParser: true, useUnifiedTopology: true });
 
-const db = mongoose.connection;
+/*const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
     console.log("DB connected!")
     // we're connected!
 });
+*/
+//my database, should have access from any ip 
+mongoose.connect("mongodb+srv://iris:iris123@mycluster1.7zdgt.mongodb.net/UserSettings?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true })
 
 
 app.get('/', (req, res) => {
@@ -40,7 +50,37 @@ app.listen(port, () => {
     console.log(`CV App listening at http://localhost:${port}`)
 })
 
-app.use('/cvIO', cvRouter);
+// makes a pdf from the users cv Page and sends it back to him
+app.post('/downloadCV', (req,res) =>{
+    const cvURL = req.body.url;
+    printPDF(cvURL).then(result => {res.set({'Content-Type': 'application/pdf', 'Content-Length': result.length})
+    res.send(result)}).catch(console.error);
+    console.log("Received HTML as PDF request")
+})
+
+//sends the PDF with the CV back to the Client 
+app.get('/fetch-pdf', (req,res) =>{
+    res.sendFile(`${__dirname}/myCV.pdf`)
+})
+
+
+//prints PDF to mypdf.pdf (is overwritten everytime)
+async function printPDF(url){
+    try{
+    const browser = await puppeteer.launch({headless: true});
+    const page = await browser.newPage();
+    await page.goto(url,{waitUntil: 'networkidle0'});
+    //await page.addStyleTag({content: '.nav {display:none} .navbar {border:0px} '})
+    const pdf = await page.pdf({path:'myCV.pdf',format: 'A4'});
+    await browser.close();
+    return pdf;
+    
+    } catch(e){
+        console.log('Error', e)
+    }
+}
+
+
 
 
 // This function will use puppeteer to extract the data of a website
