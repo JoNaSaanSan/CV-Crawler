@@ -18,6 +18,7 @@ class ProfileComponent extends React.Component {
         this.state = {
             url: '',
             name: '',
+            email: store.getState().user.email,
             keywords: [],
             emailLimit: 5,
             newInfo: true,
@@ -60,6 +61,7 @@ handleDownload = (event) => {
         }
     axios.post('http://localhost:3001/downloadCV', downloadCV)
     .then(res=>{ console.log(res.data)})
+    .then(alert("Just a moment.."))
     .then(() => axios.get('/fetch-pdf', { responseType: 'blob' }))
       .then((res) => {
         const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
@@ -78,6 +80,12 @@ handleDelete = (event) => {
     }
     axios.post('http://localhost:3001/deleteUser', deleteUser).then(res=>{
         console.log(res.data)
+        if(res.data.message === "User deleted successfully"){
+            alert("Your Account was deleted. If you want to rejoin you need to register again.");
+            this.setState({
+                loggedIn: false
+            })
+        }
     })
 };
 
@@ -97,20 +105,58 @@ componentDidMount= () =>{
 } 
 
 
-//sends the Login info to the backend (by now without Google Auth)
+//sends the Registration info to the backend 
 handleSubmit = (event) =>{
+    console.log(this.state);
+    event.preventDefault();
+    const userRegistration = {
+        name: this.state.name,
+        email: this.state.email,
+        url: this.state.url
+    }
+    axios.post('http://localhost:3001/userRegistration',userRegistration).then(res=>{
+        console.log(res.data)
+        if(res.data.message === "Field empty!"){
+            alert("You need to Sign In with Google and fill out the Name and CVURL field!");
+        }else{
+            if(res.data.message === "User with this name, email or URL already exists!"){
+            alert("User with this name, email or URL already exists! Please choose another name.");
+            }else{
+        if(res.data.message === "User saved successfully"){
+            this.setState({
+                loggedIn: true
+            })
+            alert("You are successfully registered!");
+        }
+    }}})
+
+}
+
+//sends the Registration info to the backend 
+handleLogin = (event) =>{
     console.log(this.state);
     event.preventDefault();
     const userLogin = {
         name: this.state.name,
+        email: this.state.email,
         url: this.state.url
     }
     axios.post('http://localhost:3001/userLogin',userLogin).then(res=>{
         console.log(res.data)
-    })
-    this.setState({
-        loggedIn: true
-    })
+        if(res.data.message === "Field empty!"){
+            alert("You need to Sign In with Google and fill out the Name and CVURL field!");
+        }else{ 
+            if(res.data.message === "User does not exist!"){
+                alert("Please Register before logging in!");
+            }
+            if(res.data.message === "User exists!"){
+            this.setState({
+                loggedIn: true
+            })
+            alert("You are successfully logged in!");
+        }
+    }})
+
 }
 
 
@@ -127,6 +173,11 @@ handleClick = (event) => {
     }
     axios.post('http://localhost:3001/updateSettings', userSettings).then(res=>{ //sends the post-request with the user settings
         console.log(res.data)
+        if(res.data.message === "Settings saved successfully"){
+            alert("Your Settings were saved successfully!");
+        }else{
+            alert("Please make sure your name and cvURL are right!");
+        }
     })
 
 };   
@@ -137,7 +188,9 @@ handleClick = (event) => {
         function valuetext(value) {
             return `${value}`;
         }
-       
+        // Redux: Update Signed in State
+        store.subscribe(() => this.setState({ isSignedIn: store.getState().user.isSignedIn, email: store.getState().user.email }))
+  
         return (
             <div className="profile-page">
                 <div className="signup-view">
@@ -148,14 +201,17 @@ handleClick = (event) => {
                              <TextField id="outlined-basic" label="Your Name" name="name" onChange={this.handleTextfieldChange} variant="outlined" />
                          </div>
                         <div id="add-urls">
-                            <TextField id="outlined-basic" onChange={this.handleTextfieldChange} name="url" label="Please enter URL of CV!" variant="outlined" />
+                            <TextField id="outlined-basic" onChange={this.handleTextfieldChange} name="url" label="Your CV URL" variant="outlined" />
                         </div>
                         <div>
-                            <Button variant="contained" onClick={this.handleSubmit} color="primary">Submit</Button>
+                            <Button variant="contained" onClick={this.handleSubmit} color="primary">Register</Button>
+                        </div>
+                        <div>
+                            <Button variant="contained" onClick={this.handleLogin} color="primary">Login</Button>
                         </div>
                     </div>
                     <Divider variant="middle" />
-                    {  this.state.loggedIn ?
+                    {  this.state.loggedIn && this.state.isSignedIn ?
                     <div className="settings-box">
                         <h2>Settings</h2>
                         <div>

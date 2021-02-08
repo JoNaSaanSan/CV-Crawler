@@ -33,17 +33,23 @@ cvIO.get('/saveuser', (req, res) => {
 
 });
 
-//saves the username & cvurl to the database
-cvIO.route('/userLogin').post((req,res) =>{
+//saves the user name, email, CVurl to the database
+cvIO.route('/userRegistration').post((req,res) =>{
     const name = req.body.name;
     const cvURL = req.body.url;
-    const newUser = new User ({
+    const email = req.body.email;
+    const newUser = new User({
         name, 
+        email,
         cvURL
     })
-    User.findOne({"name" : name},{"cvURL": cvURL},function(err, foundUser){
-        if(foundUser){
-            res.json({message: "User with this name or URL already exists!"});
+    if(name != '' && cvURL != '' && email != ''){
+    User.findOne({"email": email},function(err, foundEmail){
+       User.findOne({"name": name}, function(err, foundName){
+          User.findOne({"cvURL": cvURL}, function(err, foundCVURL){
+        if(foundEmail || foundName || foundCVURL){  // add foundEmail after testing!
+            //console.log(foundEmail, foundName, foundCVURL);
+            res.json({message: "User with this name, email or URL already exists!"});
         }else{
             newUser.save()
         .then(newUser =>{
@@ -51,9 +57,33 @@ cvIO.route('/userLogin').post((req,res) =>{
         })
         .catch(err =>{
             console.log(err);
-        })}
-    })
-    
+        })}})
+        })})
+        }else{
+            res.json({message:"Field empty!"});
+        }
+})
+
+
+//checks if the user who wants to log in is in the database
+cvIO.route('/userLogin').post((req,res) =>{
+    const name = req.body.name;
+    const cvURL = req.body.url;
+    const email = req.body.email;
+
+    if(name != '' && cvURL != '' && email != ''){
+    User.findOne({"name": name, "cvURL":cvURL, "email": email},function(err, foundUser){ //add name and cvurl after testing
+        if(!foundUser){
+        res.json({message: "User does not exist!"});
+    } else{
+        if(foundUser){
+            res.json({message: "User exists!"});
+        }
+    }
+})
+    } else{
+    res.json({message:"Field empty!"});
+}
 })
 
 
