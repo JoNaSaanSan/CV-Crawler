@@ -2,6 +2,7 @@ import { Button, TextField } from '@material-ui/core';
 import CVComponent from './CVComponent';
 import StackGrid from "react-stack-grid";
 import profilepic from '../profilepic.png'
+import MailForm from '../mail/MailForm';
 const React = require('react');
 require('./HomeProfilesComponent.css');
 
@@ -79,6 +80,7 @@ class HomeProfilesComponent extends React.Component {
                         <a href="www.google.de">CV Website</a>
                         <hr />
                         <h3>Keywords</h3>
+                        <MailForm firstName={""} email={"max.mustermann@gmail.com"} />
                     </div>
                 </div>
 

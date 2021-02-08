@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import "./ProfileComponent.css"
-import MailForm from "../mail/client/MailForm"
+import MailForm from "../mail/MailForm"
 
 export class ContactUsComponent extends Component {
     render() {
