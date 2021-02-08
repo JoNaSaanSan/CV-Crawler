@@ -148,6 +148,14 @@ cvIO.route('/deleteUser').post((req,res) =>{
         }
     })
 })
+//fetches the current settings to display them in the database
+cvIO.route('/getUserSettings').post((req,res) =>{
+    const name = req.body.name;
+    const cvURL = req.body.url;
+    User.findOne({"name" : name, "cvURL": cvURL}, function(err, foundUser){
+        res.send(foundUser);
+    })
+})
 
 
 

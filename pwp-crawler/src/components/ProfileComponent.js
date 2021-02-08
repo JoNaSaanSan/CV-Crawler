@@ -16,8 +16,8 @@ class ProfileComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            url: '',
-            name: '',
+            url: localStorage.getItem('cvURL') || '',
+            name: localStorage.getItem('Name') || '',
             email: store.getState().user.email,
             keywords: [],
             emailLimit: 5,
@@ -25,10 +25,6 @@ class ProfileComponent extends React.Component {
 
             loggedIn: false,  //Name & CV-URL submitted
             isSignedIn: store.getState().user.isSignedIn, //Google Auth Login 
-
-            currURL: '', 
-            currKeywords: [],
-            currEmailLimit: 5,
         }
 
         // Binds
@@ -50,7 +46,27 @@ handleTextfieldChange = (event) => {
         this.setState({
         [event.target.name]:event.target.value
         })
+      //  localStorage.setItem(event.target.name, event.target.value);
+        
 };
+
+//loads the users current settings and input 
+componentDidMount = () =>{
+    console.log(localStorage);
+    const name = localStorage.getItem('Name');
+    const url = localStorage.getItem('cvURL');
+    var loggedIn = localStorage.getItem('loggedIn');
+    var isSignedIn = localStorage.getItem('signedIn');
+   //var Keywords = localStorage.getItem('Keywords');
+    
+        this.setState({
+            name: name,
+            url: url,
+            loggedIn: loggedIn,
+            issignedIn: isSignedIn
+        })
+    console.log(this.state);
+}
 
 //handles when Download PDF Button is clicked
 handleDownload = (event) => {
@@ -89,21 +105,6 @@ handleDelete = (event) => {
     })
 };
 
-//should load the users current settings and display them - not working yet
-componentDidMount= () =>{
-    fetch("/getSettings").then(res =>{
-        if(res.ok){
-            return res.json()
-        }
-    }).then(jsonRes => this.setState({
-        currURL: jsonRes.url,
-        currKeywords: jsonRes.keywords,
-        currEmailLimit: jsonRes.emailLimit,
-        }
-    ));
-    console.log(this.state);
-} 
-
 
 //sends the Registration info to the backend 
 handleSubmit = (event) =>{
@@ -126,13 +127,18 @@ handleSubmit = (event) =>{
             this.setState({
                 loggedIn: true
             })
+            localStorage.setItem( 'Name', this.state.name );
+            localStorage.setItem( 'cvURL', this.state.url);
+            localStorage.setItem('loggedIn',this.state.loggedIn);
+            localStorage.setItem('signedIn',this.state.isSignedIn);
+            console.log(localStorage);
             alert("You are successfully registered!");
         }
     }}})
 
 }
 
-//sends the Registration info to the backend 
+//sends the Login info to the backend 
 handleLogin = (event) =>{
     console.log(this.state);
     event.preventDefault();
@@ -154,9 +160,27 @@ handleLogin = (event) =>{
                 loggedIn: true
             })
             alert("You are successfully logged in!");
+            axios.post('/getUserSettings', userLogin ).then(res =>{ //fetches the current user settings
+                console.log(res.data);
+                this.setState({keywords: res.data.keywords, emailLimit: res.data.emailLimit});
+            })
+            localStorage.setItem( 'Name', this.state.name);
+            localStorage.setItem( 'cvURL', this.state.url);
+            localStorage.setItem('loggedIn',this.state.loggedIn);
+            localStorage.setItem('signedIn',this.state.isSignedIn);
+          //  localStorage.setItem('Keywords', this.state.keywords);
+          //  localStorage.setItem('emailLimit', this.state.emailLimit);
+            console.log(localStorage);
+            
         }
     }})
 
+}
+
+handleLogout = () =>{
+    localStorage.clear();
+    alert('You were successfully logged out!');
+    window.location.reload(); // reloads the page so that the login page is being reset
 }
 
 
@@ -198,17 +222,25 @@ handleClick = (event) => {
                     <div className="signup-box">
                         <GoogleAuth/>
                         <div id="add-name">
-                             <TextField id="outlined-basic" label="Your Name" name="name" onChange={this.handleTextfieldChange} variant="outlined" />
+                             <TextField id="outlined-basic" value={this.state.name} label="Your Name" name="name" onChange={this.handleTextfieldChange} variant="outlined" />
                          </div>
                         <div id="add-urls">
-                            <TextField id="outlined-basic" onChange={this.handleTextfieldChange} name="url" label="Your CV URL" variant="outlined" />
+                            <TextField id="outlined-basic" value={this.state.url} onChange={this.handleTextfieldChange} name="url" label="Your CV URL" variant="outlined" />
                         </div>
+                        { this.state.loggedIn && this.state.isSignedIn ?
+                        <div></div>:
                         <div>
                             <Button variant="contained" onClick={this.handleSubmit} color="primary">Register</Button>
                         </div>
+                        }
+                        { this.state.loggedIn && this.state.isSignedIn ?
                         <div>
-                            <Button variant="contained" onClick={this.handleLogin} color="primary">Login</Button>
+                            <Button variant="contained" onClick={this.handleLogout} color="primary">Logout</Button>
+                        </div> :
+                        <div>
+                        <Button variant="contained" onClick={this.handleLogin} color="primary">Login</Button>
                         </div>
+                        }
                     </div>
                     <Divider variant="middle" />
                     {  this.state.loggedIn && this.state.isSignedIn ?
@@ -229,7 +261,8 @@ handleClick = (event) => {
                         <div>
                             <Slider
                                 name="emailLimit"
-                                defaultValue={this.state.currEmailLimit}
+                                defaultValue={5}
+                                value= {this.state.emailLimit}
                                 getAriaValueText={valuetext}
                                 aria-labelledby="Maximum E-Mails per day"
                                 step={1}
