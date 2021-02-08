@@ -33,6 +33,9 @@ class HeaderComponent extends React.Component {
             <Link to="/profile" className="menu-item button">
               Profile </Link> : <Link to="/profile" className="menu-item button">
               Log In </Link>}
+          <Link to="/contact" className="menu-item">
+            Contact Us </Link>
+
         </div>
       </div>
     )
