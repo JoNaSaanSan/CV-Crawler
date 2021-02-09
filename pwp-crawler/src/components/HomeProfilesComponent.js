@@ -12,13 +12,28 @@ class HomeProfilesComponent extends React.Component {
         super(props);
 
         this.state = {
+            names: [],
+            currentName: ""
         }
+        this.getNamesFromDB = this.getNamesFromDB.bind(this)
+        //this.openPopup = this.openPopup.bind(this)
     }
 
-    openPopup(){
-        document.querySelector('.bg-modal').style.display = "flex";
-        document.body.style.overflow = "hidden";
+     // Called when window is loaded
+    componentDidMount() {
+        this.getNamesFromDB();
+        console.log("componentdidmount aufgerufen")
+    }
 
+    openPopup(i){
+        this.setState({currentName: this.state.names[i]})
+        this.grid.updateLayout()
+
+        document.querySelector('.bg-modal').style.display = "flex";
+        window.scrollTo(0,0)
+        //document.body.style.overflow = "hidden";
+        //this.getNamesFromDB();
+        this.showCards();
     }
 
     closePopup(){
@@ -26,59 +41,65 @@ class HomeProfilesComponent extends React.Component {
         document.body.style.overflow = "auto";
     }
     
+    getNamesFromDB(){
+        //console.log("names davor " + this.state.names)
+        // GET request
+        fetch('http://localhost:3001/getSettings').then(response => {
+            return response.json();
+          })
+          .then(data => {
+            console.log("Fetching Names...")
+            let tempArr = [];
+            // create names list
+            for (var i = 0; i < data.length; i++) {
+                tempArr.push(data[i].name);
+            }
+            this.setState({names: tempArr})
+            console.log("temp Arrayyyy" + tempArr)
+          }).catch(error => {
+            console.log(error);
+          });
+        
+        /*
+        .then(res =>{
+            if(res.ok){
+                return res.json()
+            }
+        }).then(jsonRes => this.setState({
+            name: jsonRes.name
+            }));
+            console.log("names danach " + this.state.names)
+            */
+    }
+
+    showCards(){
+        console.log("showCards")
+        return this.state.names.map((object, i) =>
+            <div key={i} className = "cv-element" onClick={this.openPopup.bind(this, i)}> <CVComponent name={object}/></div>
+        )
+        
+    }
 
     render() {
+        console.log("render funktion")
         return (
             <div className="home_container">
                 <div className = "buttons_container">
                     <button className = "buttons">All Profiles</button>
                     <button className = "buttons">Matched Profiles</button>
                </div>
-               
-               <StackGrid columnWidth={350} className="stackgrid">
-                    <div key="key1" className = "cv-element" onClick={this.openPopup}>
-                        <CVComponent name="Max Mustermann"/>
-                    </div>
-                    <div key="key2" className = "cv-element">
-                        <CVComponent name="Anja Scherer"/>
-                    </div>
-                    <div key="key3" className = "cv-element">
-                        <CVComponent name="Simon Schmitz"/>
-                    </div>
-                    <div key="key4" className = "cv-element">
-                        <CVComponent name="Anna Huber"/>
-                    </div>
-                    <div key="key5" className = "cv-element">
-                        <CVComponent name="Miriam Schnitz"/>
-                    </div>
-                    <div key="key6" className = "cv-element">
-                        <CVComponent name="Simon Hoffinger"/>
-                    </div>
-                    <div key="key7" className = "cv-element">
-                        <CVComponent name="Thomas Riegner"/>
-                    </div>
-                    <div key="key8" className = "cv-element">
-                        <CVComponent name="Paula Oberacher"/>
-                    </div>
-                    <div key="key9" className = "cv-element">
-                        <CVComponent name="Johannes Niepe"/>
-                    </div>
-                    <div key="key10" className = "cv-element">
-                        <CVComponent name="Andreas Barth"/>
-                    </div>
-                    <div key="key11" className = "cv-element">
-                        <CVComponent name="Veronika Wimmer"/>
-                    </div>
-                    <div key="key12" className = "cv-element">
-                        <CVComponent name="Maximilian Randersdorfer"/>
-                    </div>
+
+
+               <StackGrid columnWidth={350} className="stackgrid" gridRef={grid => this.grid = grid} monitorImagesLoaded = {true}>
+                {this.showCards()}
                </StackGrid>
 
+               
                <div class="bg-modal">
                     <div class="modal-contents">
                         <div class="close" onClick={this.closePopup}>+</div>
                         <img className="profile-picture" src={profilepic} />
-                        <h1>Max Mustermann</h1>
+                        <h1>{this.state.currentName}</h1>
                         <p>max.mustermann@gmail.com</p>
                         <a href="www.google.de">CV Website</a>
                         <hr/>

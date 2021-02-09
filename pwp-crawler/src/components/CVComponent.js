@@ -5,12 +5,9 @@ require('./CVComponent.css');
 
 class CVComponent extends React.Component {
 
-
     constructor(props) {
         super(props);
-
         this.state = {
-
         }
 
     }
@@ -28,11 +25,9 @@ class CVComponent extends React.Component {
         }
         return color;
       }
-      
-//style={{marginRight: spacing + 'em'}} 
-//style={{backgroundColor: this.getRandomColor()}, {height: this.getRandomHeight() + "px"}
 
     render() {
+        //styling of div container
         const myStyle = {
             backgroundColor: this.getRandomColor(),
             height: this.getRandomHeight() + "px"
@@ -41,8 +36,6 @@ class CVComponent extends React.Component {
             <div className="cv_container"  style={myStyle}>
                <h1 className="cv-name">{this.props.name}</h1>
             </div>
-
-
         )
     }
 }
