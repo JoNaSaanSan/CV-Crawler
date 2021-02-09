@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+/**
+ * Represents a user in the cv matching service.
+ */
 const userSchema = new Schema({
     name: {
         type: String,
