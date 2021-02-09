@@ -20,6 +20,7 @@ class ProfileComponent extends React.Component {
             name: localStorage.getItem('Name') || '',
             email: store.getState().user.email,
             keywords: [],
+            email: '',
             emailLimit: 5,
             newInfo: true,
 
@@ -31,22 +32,23 @@ class ProfileComponent extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-//handles Change of the Slieder field 
-handleSliderChange = (event, newValue) => {
-    this.setState({ emailLimit : newValue});
-};
+    //handles Change of the Slieder field 
+    handleSliderChange = (event, newValue) => {
+        this.setState({ emailLimit: newValue });
+    };
 
-//handles Change of the Keywords 
-handleChange = (keywords) => {
-    this.setState({keywords})
-};
+    //handles Change of the Keywords 
+    handleChange = (keywords) => {
+        this.setState({ keywords })
+    };
 
-//handles change of the textfields Name & URL
-handleTextfieldChange = (event) => {
+    //handles change of the textfields Name & URL
+    handleTextfieldChange = (event) => {
         this.setState({
-        [event.target.name]:event.target.value
+            [event.target.name]: event.target.value
         })
-};
+    };
+
 
 //loads the users current settings and input 
 componentDidMount = () =>{
@@ -192,16 +194,16 @@ handleLogout = () =>{
 
 //handles when the save Button is being clicked and saves the User settings to the right user 
 handleClick = (event) => {
-    console.log(this.state);
-    event.preventDefault();
-    const userSettings = {
-        name: this.state.name,
-        url: this.state.url,
-        keywords: this.state.keywords,
-        emailLimit: this.state.emailLimit,
-        newInfo: this.state.newInfo
-    }
-    axios.post('http://localhost:3001/updateSettings', userSettings).then(res=>{ //sends the post-request with the user settings
+        console.log(this.state);
+        event.preventDefault();
+        const userSettings = {
+            name: this.state.name,
+            url: this.state.url,
+            keywords: this.state.keywords,
+            emailLimit: this.state.emailLimit,
+            newInfo: this.state.newInfo,
+        }
+        axios.post('http://localhost:3001/updateSettings', userSettings).then(res=>{ //sends the post-request with the user settings
         console.log(res.data)
         if(res.data.message === "Settings saved successfully"){
             alert("Your Settings were saved successfully!");
@@ -216,8 +218,7 @@ handleClick = (event) => {
             alert("Please make sure your name and cvURL are right!");
         }
     })
-
-};   
+};
 
     render() {
 
@@ -235,7 +236,7 @@ handleClick = (event) => {
                     <h1>Welcome to the matching tool!</h1>:
                     <h1>Sign up to the matching tool!</h1>}
                     <div className="signup-box">
-                        <GoogleAuth/>
+                        <GoogleAuth />
                         <div id="add-name">
                              <TextField id="outlined-basic" value={this.state.name} label="Your Name" name="name" onChange={this.handleTextfieldChange} variant="outlined" />
                          </div>
@@ -267,11 +268,11 @@ handleClick = (event) => {
                         <div>
                              Insert Matching Keywords:
                          </div>
-                    <div>
-                         <TagsInput inputProps={{className: 'react-tagsinput-input',placeholder:'Keywords'}} value={this.state.keywords} onChange={this.handleChange} />
-                    </div>                            
-                        <div>
-                            Maximum E-Mails per day
+                            <div>
+                                <TagsInput inputProps={{ className: 'react-tagsinput-input', placeholder: 'Keywords' }} value={this.state.keywords} onChange={this.handleChange} />
+                            </div>
+                            <div>
+                                Maximum E-Mails per day
                         </div>
                         <div>
                             <Slider
@@ -286,26 +287,26 @@ handleClick = (event) => {
                                 max={10}
                                 valueLabelDisplay="auto"
                                 onChangeCommitted={this.handleSliderChange}
-                            />
+                            />                
+                            </div>
+                            <div>
+                                <Button variant="contained" onClick={this.handleClick} color="primary">Save</Button>
+                            </div>
+                            <Divider id="div" variant="middle" />
+                            <div>
+                                <div>
+                                    <span class="label label-default">Delete all my information.</span>
+                                </div>
+                                <div>
+                                    <Button variant="outline-primary" color="primary" onClick={this.handleDelete}>Delete account</Button>
+                                </div>
+
+                            </div>
                         </div>
-                        <div>
-                            <Button variant="contained" onClick={this.handleClick} color="primary">Save</Button>
-                        </div>
-                            <Divider id="div" variant="middle"/>
-                        <div>
-                        <div>
-                            <span class="label label-default">Delete all my information.</span>
-                        </div>
-                        <div> 
-                            <Button variant="outline-primary" color="primary" onClick={this.handleDelete}>Delete account</Button> 
-                        </div>
-                        
-                    </div>
+                        :
+                        <div></div>}
                 </div>
-                : 
-                <div></div>}
             </div>
-        </div>
         )
     }
 }
