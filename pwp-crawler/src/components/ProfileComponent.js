@@ -205,6 +205,13 @@ handleClick = (event) => {
         console.log(res.data)
         if(res.data.message === "Settings saved successfully"){
             alert("Your Settings were saved successfully!");
+            axios.post('/getUserSettings', userSettings ).then(res =>{ //fetches the current user settings
+                console.log(res.data);
+                this.setState({keywords: res.data.keywords, emailLimit: res.data.emailLimit});
+                localStorage.setItem('Keywords',JSON.stringify(res.data.keywords));
+                localStorage.setItem('emailLimit', res.data.emailLimit);
+            
+            })
         }else{
             alert("Please make sure your name and cvURL are right!");
         }
@@ -224,7 +231,9 @@ handleClick = (event) => {
         return (
             <div className="profile-page">
                 <div className="signup-view">
-                    <h1>Sign up to the matching tool!</h1>
+                { this.state.loggedIn && this.state.isSignedIn ?
+                    <h1>Welcome to the matching tool!</h1>:
+                    <h1>Sign up to the matching tool!</h1>}
                     <div className="signup-box">
                         <GoogleAuth/>
                         <div id="add-name">
