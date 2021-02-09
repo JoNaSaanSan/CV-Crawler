@@ -46,8 +46,6 @@ handleTextfieldChange = (event) => {
         this.setState({
         [event.target.name]:event.target.value
         })
-      //  localStorage.setItem(event.target.name, event.target.value);
-        
 };
 
 //loads the users current settings and input 
@@ -57,7 +55,8 @@ componentDidMount = () =>{
     const url = localStorage.getItem('cvURL');
     var loggedIn = localStorage.getItem('loggedIn');
     var isSignedIn = localStorage.getItem('signedIn');
-   //var Keywords = localStorage.getItem('Keywords');
+    var keywords = localStorage.getItem('Keywords');
+    var emailLimit = localStorage.getItem('emailLimit');
     
         this.setState({
             name: name,
@@ -65,6 +64,12 @@ componentDidMount = () =>{
             loggedIn: loggedIn,
             issignedIn: isSignedIn
         })
+       if(keywords !== null && emailLimit !== 5){
+            this.setState({
+                keywords: JSON.parse(keywords),
+                emailLimit: emailLimit
+            })
+        }
     console.log(this.state);
 }
 
@@ -163,13 +168,14 @@ handleLogin = (event) =>{
             axios.post('/getUserSettings', userLogin ).then(res =>{ //fetches the current user settings
                 console.log(res.data);
                 this.setState({keywords: res.data.keywords, emailLimit: res.data.emailLimit});
+                localStorage.setItem('Keywords',JSON.stringify(res.data.keywords));
+                localStorage.setItem('emailLimit', res.data.emailLimit);
+            
             })
             localStorage.setItem( 'Name', this.state.name);
             localStorage.setItem( 'cvURL', this.state.url);
             localStorage.setItem('loggedIn',this.state.loggedIn);
             localStorage.setItem('signedIn',this.state.isSignedIn);
-          //  localStorage.setItem('Keywords', this.state.keywords);
-          //  localStorage.setItem('emailLimit', this.state.emailLimit);
             console.log(localStorage);
             
         }
