@@ -3,8 +3,7 @@ var cvIO = express.Router();
 
 const mongoose = require('mongoose');
 
-// Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
-// by default, you need to set it to false.
+// Make Mongoose use `findOneAndUpdate()`.
 mongoose.set('useFindAndModify', false);
 const User = require('../models/userSchema')
 const CV = require('../models/cvSchema');

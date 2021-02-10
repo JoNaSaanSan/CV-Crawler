@@ -16,8 +16,9 @@ class ProfileComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            url: '',
-            name: '',
+            url: localStorage.getItem('cvURL') || '',
+            name: localStorage.getItem('Name') || '',
+            email: store.getState().user.email,
             keywords: [],
             email: '',
             emailLimit: 5,
@@ -25,10 +26,6 @@ class ProfileComponent extends React.Component {
 
             loggedIn: false,  //Name & CV-URL submitted
             isSignedIn: store.getState().user.isSignedIn, //Google Auth Login 
-
-            currURL: '',
-            currKeywords: [],
-            currEmailLimit: 5,
         }
 
         // Binds
@@ -52,72 +49,151 @@ class ProfileComponent extends React.Component {
         })
     };
 
-    //handles when Download PDF Button is clicked
-    handleDownload = (event) => {
-        event.preventDefault();
-        const downloadCV = {
-            name: this.state.name,
-            url: this.state.url
-        }
-        axios.post('http://localhost:3001/downloadCV', downloadCV)
-            .then(res => { console.log(res.data) })
-            .then(() => axios.get('/fetch-pdf', { responseType: 'blob' }))
-            .then((res) => {
-                const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
-                saveAs(pdfBlob, 'myCV.pdf');
-            })
-    };
 
-
-    //handles Request to Delete all the user data from a specific user from the database
-    handleDelete = (event) => {
-        console.log(this.state);
-        event.preventDefault();
-        const deleteUser = {
-            name: this.state.name,
-            url: this.state.url
-        }
-        axios.post('http://localhost:3001/deleteUser', deleteUser).then(res => {
-            console.log(res.data)
-        })
-    };
-
-    //should load the users current settings and display them - not working yet
-    componentDidMount = () => {
-        fetch("/getSettings").then(res => {
-            if (res.ok) {
-                return res.json()
-            }
-        }).then(jsonRes => this.setState({
-            currURL: jsonRes.url,
-            currKeywords: jsonRes.keywords,
-            currEmailLimit: jsonRes.emailLimit,
-        }
-        ));
-        console.log(this.state);
-    }
-
-
-    //sends the Login info to the backend
-    handleSubmit = (event) => {
-        console.log(this.state);
-        event.preventDefault();
-        const userLogin = {
-            name: this.state.name,
-            email: store.getState().user.email,
-            url: this.state.url
-        }
-        axios.post('http://localhost:3001/userLogin', userLogin).then(res => {
-            console.log(res.data)
-        })
+//loads the users current settings and input 
+componentDidMount = () =>{
+    console.log(localStorage);
+    const name = localStorage.getItem('Name');
+    const url = localStorage.getItem('cvURL');
+    var loggedIn = localStorage.getItem('loggedIn');
+    var isSignedIn = localStorage.getItem('signedIn');
+    var keywords = localStorage.getItem('Keywords');
+    var emailLimit = localStorage.getItem('emailLimit');
+    
         this.setState({
-            loggedIn: true
+            name: name,
+            url: url,
+            loggedIn: loggedIn,
+            issignedIn: isSignedIn
         })
+       if(keywords !== null && emailLimit !== 5){
+            this.setState({
+                keywords: JSON.parse(keywords),
+                emailLimit: emailLimit
+            })
+        }
+    console.log(this.state);
+}
+
+//handles when Download PDF Button is clicked
+handleDownload = (event) => {
+    event.preventDefault();
+    const downloadCV = {
+            name: this.state.name,
+            url: this.state.url
+        }
+    axios.post('http://localhost:3001/downloadCV', downloadCV)
+    .then(res=>{ console.log(res.data)})
+    .then(alert("Just a moment.."))
+    .then(() => axios.get('/fetch-pdf', { responseType: 'blob' }))
+      .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+        saveAs(pdfBlob, 'myCV.pdf');
+      })
+};
+
+
+//handles Request to Delete all the user data from a specific user from the database
+handleDelete = (event) => {
+    console.log(this.state);
+    event.preventDefault();
+    const deleteUser = {
+        name: this.state.name,
+        url: this.state.url
     }
+    axios.post('http://localhost:3001/deleteUser', deleteUser).then(res=>{
+        console.log(res.data)
+        if(res.data.message === "User deleted successfully"){
+            alert("Your Account was deleted. If you want to rejoin you need to register again.");
+            this.setState({
+                loggedIn: false
+            })
+        }
+    })
+};
 
 
-    //handles when the save Button is being clicked and saves the User settings to the right user 
-    handleClick = (event) => {
+//sends the Registration info to the backend 
+handleSubmit = (event) =>{
+    console.log(this.state);
+    event.preventDefault();
+    const userRegistration = {
+        name: this.state.name,
+        email: this.state.email,
+        url: this.state.url
+    }
+    axios.post('http://localhost:3001/userRegistration',userRegistration).then(res=>{
+        console.log(res.data)
+        if(res.data.message === "Field empty!"){
+            alert("You need to Sign In with Google and fill out the Name and CVURL field!");
+        }else{
+            if(res.data.message === "User with this name, email or URL already exists!"){
+            alert("User with this name, email or URL already exists! Please choose another name.");
+            }else{
+        if(res.data.message === "User saved successfully"){
+            this.setState({
+                loggedIn: true
+            })
+            localStorage.setItem( 'Name', this.state.name );
+            localStorage.setItem( 'cvURL', this.state.url);
+            localStorage.setItem('loggedIn',this.state.loggedIn);
+            localStorage.setItem('signedIn',this.state.isSignedIn);
+            console.log(localStorage);
+            alert("You are successfully registered!");
+        }
+    }}})
+
+}
+
+//sends the Login info to the backend 
+handleLogin = (event) =>{
+    console.log(this.state);
+    event.preventDefault();
+    const userLogin = {
+        name: this.state.name,
+        email: this.state.email,
+        url: this.state.url
+    }
+    axios.post('http://localhost:3001/userLogin',userLogin).then(res=>{
+        console.log(res.data)
+        if(res.data.message === "Field empty!"){
+            alert("You need to Sign In with Google and fill out the Name and CVURL field!");
+        }else{ 
+            if(res.data.message === "User does not exist!"){
+                alert("Please Register before logging in!");
+            }
+            if(res.data.message === "User exists!"){
+            this.setState({
+                loggedIn: true
+            })
+            alert("You are successfully logged in!");
+            axios.post('/getUserSettings', userLogin ).then(res =>{ //fetches the current user settings
+                console.log(res.data);
+                this.setState({keywords: res.data.keywords, emailLimit: res.data.emailLimit});
+                localStorage.setItem('Keywords',JSON.stringify(res.data.keywords));
+                localStorage.setItem('emailLimit', res.data.emailLimit);
+            
+            })
+            localStorage.setItem( 'Name', this.state.name);
+            localStorage.setItem( 'cvURL', this.state.url);
+            localStorage.setItem('loggedIn',this.state.loggedIn);
+            localStorage.setItem('signedIn',this.state.isSignedIn);
+            console.log(localStorage);
+            
+        }
+    }})
+
+}
+
+handleLogout = () =>{
+    localStorage.clear();
+    alert('You were successfully logged out!');
+    window.location.reload(); // reloads the page so that the login page is being reset
+}
+
+
+//handles when the save Button is being clicked and saves the User settings to the right user 
+handleClick = (event) => {
         console.log(this.state);
         event.preventDefault();
         const userSettings = {
@@ -127,11 +203,22 @@ class ProfileComponent extends React.Component {
             emailLimit: this.state.emailLimit,
             newInfo: this.state.newInfo,
         }
-        axios.post('http://localhost:3001/updateSettings', userSettings).then(res => { //sends the post-request with the user settings
-            console.log(res.data)
-        })
-
-    };
+        axios.post('http://localhost:3001/updateSettings', userSettings).then(res=>{ //sends the post-request with the user settings
+        console.log(res.data)
+        if(res.data.message === "Settings saved successfully"){
+            alert("Your Settings were saved successfully!");
+            axios.post('/getUserSettings', userSettings ).then(res =>{ //fetches the current user settings
+                console.log(res.data);
+                this.setState({keywords: res.data.keywords, emailLimit: res.data.emailLimit});
+                localStorage.setItem('Keywords',JSON.stringify(res.data.keywords));
+                localStorage.setItem('emailLimit', res.data.emailLimit);
+            
+            })
+        }else{
+            alert("Please make sure your name and cvURL are right!");
+        }
+    })
+};
 
     render() {
 
@@ -139,32 +226,47 @@ class ProfileComponent extends React.Component {
         function valuetext(value) {
             return `${value}`;
         }
-
+        // Redux: Update Signed in State
+        store.subscribe(() => this.setState({ isSignedIn: store.getState().user.isSignedIn, email: store.getState().user.email }))
+  
         return (
             <div className="profile-page">
                 <div className="signup-view">
-                    <h1>Sign up to the matching tool!</h1>
+                { this.state.loggedIn && this.state.isSignedIn ?
+                    <h1>Welcome to the matching tool!</h1>:
+                    <h1>Sign up to the matching tool!</h1>}
                     <div className="signup-box">
                         <GoogleAuth />
                         <div id="add-name">
-                            <TextField id="outlined-basic" label="Your Name" name="name" onChange={this.handleTextfieldChange} variant="outlined" />
-                        </div>
+                             <TextField id="outlined-basic" value={this.state.name} label="Your Name" name="name" onChange={this.handleTextfieldChange} variant="outlined" />
+                         </div>
                         <div id="add-urls">
-                            <TextField id="outlined-basic" onChange={this.handleTextfieldChange} name="url" label="Please enter URL of CV!" variant="outlined" />
+                            <TextField id="outlined-basic" value={this.state.url} onChange={this.handleTextfieldChange} name="url" label="Your CV URL" variant="outlined" />
                         </div>
+                        { this.state.loggedIn && this.state.isSignedIn ?
+                        <div></div>:
                         <div>
-                            <Button variant="contained" onClick={this.handleSubmit} color="primary">Submit</Button>
+                            <Button variant="contained" onClick={this.handleSubmit} color="primary">Register</Button>
                         </div>
+                        }
+                        { this.state.loggedIn && this.state.isSignedIn ?
+                        <div>
+                            <Button variant="contained" onClick={this.handleLogout} color="primary">Logout</Button>
+                        </div> :
+                        <div>
+                        <Button variant="contained" onClick={this.handleLogin} color="primary">Login</Button>
+                        </div>
+                        }
                     </div>
                     <Divider variant="middle" />
-                    {this.state.loggedIn ?
-                        <div className="settings-box">
-                            <h2>Settings</h2>
-                            <div>
-                                <Button variant="contained" color="primary" onClick={this.handleDownload}>Download my CV as PDF</Button>
-                            </div>
-                            <div>
-                                Insert Matching Keywords:
+                    {  this.state.loggedIn && this.state.isSignedIn ?
+                    <div className="settings-box">
+                        <h2>Settings</h2>
+                        <div>
+                            <Button variant="contained" color="primary" onClick={this.handleDownload}>Download my CV as PDF</Button>
+                        </div> 
+                        <div>
+                             Insert Matching Keywords:
                          </div>
                             <div>
                                 <TagsInput inputProps={{ className: 'react-tagsinput-input', placeholder: 'Keywords' }} value={this.state.keywords} onChange={this.handleChange} />
@@ -172,19 +274,20 @@ class ProfileComponent extends React.Component {
                             <div>
                                 Maximum E-Mails per day
                         </div>
-                            <div>
-                                <Slider
-                                    name="emailLimit"
-                                    defaultValue={this.state.currEmailLimit}
-                                    getAriaValueText={valuetext}
-                                    aria-labelledby="Maximum E-Mails per day"
-                                    step={1}
-                                    marks
-                                    min={0}
-                                    max={10}
-                                    valueLabelDisplay="auto"
-                                    onChangeCommitted={this.handleSliderChange}
-                                />
+                        <div>
+                            <Slider
+                                name="emailLimit"
+                                defaultValue={5}
+                                value= {this.state.emailLimit}
+                                getAriaValueText={valuetext}
+                                aria-labelledby="Maximum E-Mails per day"
+                                step={1}
+                                marks
+                                min={0}
+                                max={10}
+                                valueLabelDisplay="auto"
+                                onChangeCommitted={this.handleSliderChange}
+                            />                
                             </div>
                             <div>
                                 <Button variant="contained" onClick={this.handleClick} color="primary">Save</Button>
