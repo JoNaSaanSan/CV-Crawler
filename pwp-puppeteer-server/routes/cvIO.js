@@ -86,9 +86,25 @@ const manageCVs = async (foundUsers) => {
 /**
  * Returns all cvs.
  */
-cvIO.route('/getCVs').get((req, res) => {
+cvIO.route('/getAllCVs').get((req, res) => {
     CV.find()
-        .then(foundSettings => res.json(foundSettings));
+        .then(foundCVs => res.json(foundCVs));
+})
+
+/**
+ * Returns already crawled cvs.
+ */
+cvIO.route('/getCrawledCVs').get((req, res) => {
+    CV.find({ newInfo: false })
+        .then(foundCVs => res.json(foundCVs));
+})
+
+/**
+ * Returns all cvs with no matches yet.
+ */
+cvIO.route('/getNotMatchedCVs').get((req, res) => {
+    CV.find({ matchedCVs: [''] })
+        .then(foundCVs => res.json(foundCVs));
 })
 
 /**
