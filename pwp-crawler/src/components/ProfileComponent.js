@@ -22,7 +22,7 @@ class ProfileComponent extends React.Component {
             keywords: [],
             email: '',
             emailLimit: 5,
-            newInfo: true,
+            newInfo: false,
 
             loggedIn: false,  //Name & CV-URL submitted
             isSignedIn: store.getState().user.isSignedIn, //Google Auth Login 
@@ -32,7 +32,7 @@ class ProfileComponent extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    //handles Change of the Slieder field 
+    //handles Change of the Slider 
     handleSliderChange = (event, newValue) => {
         this.setState({ emailLimit: newValue });
     };
@@ -50,79 +50,93 @@ class ProfileComponent extends React.Component {
     };
 
 
-//loads the users current settings and input 
+/**
+ * loads the users current settings and input from localstorage
+ */
 componentDidMount = () =>{
-    console.log(localStorage);
     const name = localStorage.getItem('Name');
+    const email = localStorage.getItem('Email');
     const url = localStorage.getItem('cvURL');
     var loggedIn = localStorage.getItem('loggedIn');
     var isSignedIn = localStorage.getItem('signedIn');
     var keywords = localStorage.getItem('Keywords');
     var emailLimit = localStorage.getItem('emailLimit');
-    
-        this.setState({
+
+        this.setState({ //set state to what is in the local storage
             name: name,
+            email: email,
             url: url,
             loggedIn: loggedIn,
             issignedIn: isSignedIn
         })
-       if(keywords !== null && emailLimit !== 5){
-            this.setState({
-                keywords: JSON.parse(keywords),
+
+       if(keywords !== null && emailLimit !== 5){  //if they are not equal to the dafault values
+            this.setState({  //set state to what is in the local storage
+                keywords: JSON.parse(keywords), 
                 emailLimit: emailLimit
             })
         }
     console.log(this.state);
 }
 
-//handles when Download PDF Button is clicked
+/**
+ * handles when Download PDF Button is clicked
+ */
 handleDownload = (event) => {
-    event.preventDefault();
+    event.preventDefault(); //prevent reload
     const downloadCV = {
             name: this.state.name,
+            email: this.state.email,
             url: this.state.url
         }
-    axios.post('http://localhost:3001/downloadCV', downloadCV)
+    axios.post('http://localhost:3001/downloadCV', downloadCV) //send POST-request to /downloadCV
     .then(res=>{ console.log(res.data)})
-    .then(alert("Just a moment.."))
-    .then(() => axios.get('/fetch-pdf', { responseType: 'blob' }))
+    .then(alert("Just a moment..")) //because this takes longer then you would expect
+    .then(() => axios.get('/fetch-pdf', { responseType: 'blob' })) //sends GET-request in order to fetch the actual PDF
       .then((res) => {
-        const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
-        saveAs(pdfBlob, 'myCV.pdf');
+        const pdfBlob = new Blob([res.data], { type: 'application/pdf' }); //A file-like object of immutable, raw data. Blobs represent data that isn't necessarily in a JavaScript-native format.
+        saveAs(pdfBlob, 'myCV.pdf'); //show save file as dialogue
       })
 };
 
 
-//handles Request to Delete all the user data from a specific user from the database
+/**
+ * handles Request to Delete all the user data from a specific user from the database
+ * (called when delete account is clicked)
+ */
 handleDelete = (event) => {
-    console.log(this.state);
-    event.preventDefault();
+    event.preventDefault(); //prevent reload
     const deleteUser = {
         name: this.state.name,
+        email: this.state.email,
         url: this.state.url
     }
-    axios.post('http://localhost:3001/deleteUser', deleteUser).then(res=>{
+    axios.post('http://localhost:3001/deleteUser', deleteUser).then(res=>{ //send POST-request to /deleteUser
         console.log(res.data)
-        if(res.data.message === "User deleted successfully"){
-            alert("Your Account was deleted. If you want to rejoin you need to register again.");
+        if(res.data.message === "User deleted successfully"){ //if success
+            alert("Your Account was deleted. If you want to rejoin you need to register again."); //Inform the user about the fact that he deleted his account
             this.setState({
-                loggedIn: false
+                loggedIn: false //logout 
             })
         }
     })
 };
 
 
-//sends the Registration info to the backend 
+/**
+ * sends the Registration request
+ * (called when register button is clicked)
+ */
 handleSubmit = (event) =>{
     console.log(this.state);
     event.preventDefault();
     const userRegistration = {
         name: this.state.name,
         email: this.state.email,
-        url: this.state.url
+        url: this.state.url,
+        newInfo: true
     }
-    axios.post('http://localhost:3001/userRegistration',userRegistration).then(res=>{
+    axios.post('http://localhost:3001/userRegistration',userRegistration).then(res=>{ //send POST-request to /userRegistration
         console.log(res.data)
         if(res.data.message === "Field empty!"){
             alert("You need to Sign In with Google and fill out the Name and CVURL field!");
@@ -132,9 +146,10 @@ handleSubmit = (event) =>{
             }else{
         if(res.data.message === "User saved successfully"){
             this.setState({
-                loggedIn: true
+                loggedIn: true //login user after successful registration
             })
-            localStorage.setItem( 'Name', this.state.name );
+            localStorage.setItem( 'Name', this.state.name );        //puts all the current data from state into localstorage
+            localStorage.setItem('Email', this.state.email);
             localStorage.setItem( 'cvURL', this.state.url);
             localStorage.setItem('loggedIn',this.state.loggedIn);
             localStorage.setItem('signedIn',this.state.isSignedIn);
@@ -145,14 +160,18 @@ handleSubmit = (event) =>{
 
 }
 
-//sends the Login info to the backend 
+/**
+ * sends the login request
+ * (called when Login Button is clicked)
+ */
 handleLogin = (event) =>{
     console.log(this.state);
     event.preventDefault();
     const userLogin = {
         name: this.state.name,
         email: this.state.email,
-        url: this.state.url
+        url: this.state.url,
+        newInfo: false
     }
     axios.post('http://localhost:3001/userLogin',userLogin).then(res=>{
         console.log(res.data)
@@ -175,6 +194,7 @@ handleLogin = (event) =>{
             
             })
             localStorage.setItem( 'Name', this.state.name);
+            localStorage.setItem('Email', this.state.email);
             localStorage.setItem( 'cvURL', this.state.url);
             localStorage.setItem('loggedIn',this.state.loggedIn);
             localStorage.setItem('signedIn',this.state.isSignedIn);
@@ -185,32 +205,40 @@ handleLogin = (event) =>{
 
 }
 
+/**
+ * handles Logout
+ * (called when logout button is clicked)
+ */
 handleLogout = () =>{
-    localStorage.clear();
+    localStorage.clear(); //clear local storage
     alert('You were successfully logged out!');
     window.location.reload(); // reloads the page so that the login page is being reset
 }
 
 
-//handles when the save Button is being clicked and saves the User settings to the right user 
-handleClick = (event) => {
+/**
+ * handles user Settings and sends the request to save them, also fetches them to display them immediately
+ *(handles when the save Button is being clicked) 
+ */
+saveSettings = (event) => {
         console.log(this.state);
         event.preventDefault();
         const userSettings = {
             name: this.state.name,
+            email: this.state.email,
             url: this.state.url,
             keywords: this.state.keywords,
             emailLimit: this.state.emailLimit,
-            newInfo: this.state.newInfo,
+            newInfo: true,
         }
-        axios.post('http://localhost:3001/updateSettings', userSettings).then(res=>{ //sends the post-request with the user settings
+        axios.post('http://localhost:3001/updateSettings', userSettings).then(res=>{ //sends the post-request with the user settings to /updateSettings
         console.log(res.data)
         if(res.data.message === "Settings saved successfully"){
             alert("Your Settings were saved successfully!");
             axios.post('/getUserSettings', userSettings ).then(res =>{ //fetches the current user settings
                 console.log(res.data);
-                this.setState({keywords: res.data.keywords, emailLimit: res.data.emailLimit});
-                localStorage.setItem('Keywords',JSON.stringify(res.data.keywords));
+                this.setState({keywords: res.data.keywords, emailLimit: res.data.emailLimit}); //and saves them to the state
+                localStorage.setItem('Keywords',JSON.stringify(res.data.keywords)); //and also to the local storage
                 localStorage.setItem('emailLimit', res.data.emailLimit);
             
             })
@@ -290,7 +318,7 @@ handleClick = (event) => {
                             />                
                             </div>
                             <div>
-                                <Button variant="contained" onClick={this.handleClick} color="primary">Save</Button>
+                                <Button variant="contained" onClick={this.saveSettings} color="primary">Save</Button>
                             </div>
                             <Divider id="div" variant="middle" />
                             <div>

@@ -3,8 +3,7 @@ var userIO = express.Router();
 
 const mongoose = require('mongoose');
 
-// Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
-// by default, you need to set it to false.
+// Make Mongoose use `findOneAndUpdate()`.
 mongoose.set('useFindAndModify', false);
 const User = require('../models/userSchema');
 const CV = require('../models/cvSchema');
@@ -29,7 +28,9 @@ userIO.use(function (req, res, next) {
     next();
 });
 
-//saves the user name, email, CVurl to the database
+/**
+ * saves a new User with a name, email and CVURL to the database 
+ */
 userIO.route('/userRegistration').post((req,res) =>{
     const name = req.body.name;
     const cvURL = req.body.url;
@@ -39,52 +40,56 @@ userIO.route('/userRegistration').post((req,res) =>{
         email,
         cvURL
     })
-    if(name != '' && cvURL != '' && email != ''){
-    User.findOne({"email": email},function(err, foundEmail){
-       User.findOne({"name": name}, function(err, foundName){
-          User.findOne({"cvURL": cvURL}, function(err, foundCVURL){
-        if(foundName || foundCVURL){  // add foundEmail after testing!
-            //console.log(foundEmail, foundName, foundCVURL);
-            res.json({message: "User with this name, email or URL already exists!"});
+    if(name != '' && cvURL != '' && email != ''){  //If required variables are not empty
+    User.findOne({"email": email},function(err, foundEmail){ //see if User with this mail already exists
+       User.findOne({"name": name}, function(err, foundName){ //see if User with this namealready exists
+          User.findOne({"cvURL": cvURL}, function(err, foundCVURL){ //see if User with this cvurl already exists
+        if(foundEmail || foundName || foundCVURL){  // add foundEmail after testing!
+            res.json({message: "User with this name, email or URL already exists!"}); //return error message
         }else{
             newUser.save()
         .then(newUser =>{
-            res.json({message:"User saved successfully"})
+            res.json({message:"User saved successfully"}) //returns success msg after successfully saving the user
         })
         .catch(err =>{
             console.log(err);
         })}})
         })})
         }else{
-            res.json({message:"Field empty!"});
+            res.json({message:"Field empty!"}); //return error message
         }
 })
 
-//saves the username & cvurl to the database
+/**
+ * checks if there is a user with the requested name, cvURL and email
+ * to allow him to login on client, if he exists
+ */
 userIO.route('/userLogin').post((req, res) => {
     const name = req.body.name;
     const cvURL = req.body.url;
     const email = req.body.email;
 
-    if(name != '' && cvURL != '' && email != ''){
-    User.findOne({"name": name, "cvURL":cvURL, "email": email},function(err, foundUser){ //add name and cvurl after testing
-        if(!foundUser){
-        res.json({message: "User does not exist!"});
+    if(name != '' && cvURL != '' && email != ''){ //if not empty
+    User.findOne({"name": name, "cvURL":cvURL, "email": email},function(err, foundUser){ 
+        if(!foundUser){ //if no such user
+        res.json({message: "User does not exist!"}); //return error 
     } else{
-        if(foundUser){
-            res.json({message: "User exists!"});
+        if(foundUser){ //if user exists
+            res.json({message: "User exists!"}); //return success
         }
     }
 })
     } else{
-    res.json({message:"Field empty!"});
+    res.json({message:"Field empty!"}); //return error
 }})
 
 
-//updates the user settings when new info is sent
+/**
+ * updates the user settings in the database (cvURL,keywords,emaillimit) 
+ */
 userIO.route('/updateSettings').post((req, res) => {
-    // const {url,keywords,emailLimit,newInfo} = req.body
     const name = req.body.name;
+    const email = req.body.email;
     const cvURL = req.body.url;
     const keywords = req.body.keywords;
     const emailLimit = req.body.emailLimit;
@@ -98,18 +103,17 @@ userIO.route('/updateSettings').post((req, res) => {
             newInfo
         }
     }
-    if (newInfo === true) {
-        User.findOne({ "name": name, "cvURL": cvURL }, function (err, foundUser) {
+        User.findOne({ "name": name, "email": email }, function (err, foundUser) { //search for user with given name and email
             if (err) {
                 console.log(err);
-                res.status(500).send();
+                res.status(500).send(); //server error
             } else {
                 if (!foundUser) {
-                    res.status(404).send();
+                    res.status(404).send(); //User not found error
                 } else {
-                    User.updateOne(foundUser, newUserSettings, { overwrite: true })
+                    User.updateOne(foundUser, newUserSettings, { overwrite: true }) //Update user settings in the database with the newUserSettings
                         .then(updated => {
-                            res.json({ message: "Settings saved successfully" })
+                            res.json({ message: "Settings saved successfully" }) //return success
                         })
                         .catch(err => {
                             console.log(err);
@@ -117,28 +121,28 @@ userIO.route('/updateSettings').post((req, res) => {
 
                 }
             }
-
-        })
-    }
+    })    
 })
 
 
-//deletes the User from the database
+/**
+ * deletes a given User from the database 
+ */
 userIO.route('/deleteUser').post((req, res) => {
     const name = req.body.name;
-    const cvURL = req.body.url;
+    const email = req.body.email;
 
-    User.findOne({ "name": name, "cvURL": cvURL }, function (err, foundUser) {
+    User.findOne({ "name": name, "email": email }, function (err, foundUser) { //search for the user
         if (err) {
             console.log(err);
-            res.status(500).send();
+            res.status(500).send(); //server error
         } else {
             if (!foundUser) {
-                res.status(404).send();
+                res.status(404).send(); //User not found error
             } else {
-                User.deleteOne(foundUser)
+                User.deleteOne(foundUser) //delete User 
                     .then(deleted => {
-                        res.json({ message: "User deleted successfully" })
+                        res.json({ message: "User deleted successfully" }) // and return success
                     })
                     .catch(err => {
                         console.log(err);
@@ -148,7 +152,9 @@ userIO.route('/deleteUser').post((req, res) => {
     })
 })
 
-//fetches the current settings to display them in the database
+/**
+ * fetches the current user settings of a specific User and returns them
+ */
 userIO.route('/getUserSettings').post((req,res) =>{
     const name = req.body.name;
     const cvURL = req.body.url;
@@ -160,10 +166,12 @@ userIO.route('/getUserSettings').post((req,res) =>{
 
 
 
-//here you can see the current DB entries
-userIO.route('/getSettings').get((req, res) => {
+/**
+ * returns all the current User entries in the DB
+ */
+userIO.route('/getUsers').get((req, res) => {
     User.find()  
-        .then(foundSettings => res.json(foundSettings));
+        .then(foundUsers => res.json(foundUsers));
 })
 
 
