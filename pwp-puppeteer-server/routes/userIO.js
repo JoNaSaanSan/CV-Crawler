@@ -31,33 +31,36 @@ userIO.use(function (req, res, next) {
 /**
  * saves a new User with a name, email and CVURL to the database 
  */
-userIO.route('/userRegistration').post((req,res) =>{
+userIO.route('/userRegistration').post((req, res) => {
     const name = req.body.name;
     const cvURL = req.body.url;
     const email = req.body.email;
     const newUser = new User({
-        name, 
+        name,
         email,
         cvURL
     })
-    if(name != '' && cvURL != '' && email != ''){  //If required variables are not empty
-    User.findOne({"email": email},function(err, foundEmail){ //see if User with this mail already exists
-       User.findOne({"name": name}, function(err, foundName){ //see if User with this namealready exists
-          User.findOne({"cvURL": cvURL}, function(err, foundCVURL){ //see if User with this cvurl already exists
-        if(foundEmail || foundName || foundCVURL){  // add foundEmail after testing!
-            res.json({message: "User with this name, email or URL already exists!"}); //return error message
-        }else{
-            newUser.save()
-        .then(newUser =>{
-            res.json({message:"User saved successfully"}) //returns success msg after successfully saving the user
+    if (name != '' && cvURL != '' && email != '') {  //If required variables are not empty
+        User.findOne({ "email": email }, function (err, foundEmail) { //see if User with this mail already exists
+            User.findOne({ "name": name }, function (err, foundName) { //see if User with this namealready exists
+                User.findOne({ "cvURL": cvURL }, function (err, foundCVURL) { //see if User with this cvurl already exists
+                    if (foundEmail || foundName || foundCVURL) {  // add foundEmail after testing!
+                        res.json({ message: "User with this name, email or URL already exists!" }); //return error message
+                    } else {
+                        newUser.save()
+                            .then(newUser => {
+                                res.json({ message: "User saved successfully" }) //returns success msg after successfully saving the user
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
+                    }
+                })
+            })
         })
-        .catch(err =>{
-            console.log(err);
-        })}})
-        })})
-        }else{
-            res.json({message:"Field empty!"}); //return error message
-        }
+    } else {
+        res.json({ message: "Field empty!" }); //return error message
+    }
 })
 
 /**
@@ -69,19 +72,20 @@ userIO.route('/userLogin').post((req, res) => {
     const cvURL = req.body.url;
     const email = req.body.email;
 
-    if(name != '' && cvURL != '' && email != ''){ //if not empty
-    User.findOne({"name": name, "cvURL":cvURL, "email": email},function(err, foundUser){ 
-        if(!foundUser){ //if no such user
-        res.json({message: "User does not exist!"}); //return error 
-    } else{
-        if(foundUser){ //if user exists
-            res.json({message: "User exists!"}); //return success
-        }
+    if (name != '' && cvURL != '' && email != '') { //if not empty
+        User.findOne({ "name": name, "cvURL": cvURL, "email": email }, function (err, foundUser) {
+            if (!foundUser) { //if no such user
+                res.json({ message: "User does not exist!" }); //return error 
+            } else {
+                if (foundUser) { //if user exists
+                    res.json({ message: "User exists!" }); //return success
+                }
+            }
+        })
+    } else {
+        res.json({ message: "Field empty!" }); //return error
     }
 })
-    } else{
-    res.json({message:"Field empty!"}); //return error
-}})
 
 
 /**
@@ -103,26 +107,75 @@ userIO.route('/updateSettings').post((req, res) => {
             newInfo
         }
     }
-        User.findOne({ "name": name, "email": email }, function (err, foundUser) { //search for user with given name and email
-            if (err) {
-                console.log(err);
-                res.status(500).send(); //server error
+    User.findOne({ "name": name, "email": email }, function (err, foundUser) { //search for user with given name and email
+        if (err) {
+            console.log(err);
+            res.status(500).send(); //server error
+        } else {
+            if (!foundUser) {
+                res.status(404).send(); //User not found error
             } else {
-                if (!foundUser) {
-                    res.status(404).send(); //User not found error
-                } else {
-                    User.updateOne(foundUser, newUserSettings, { overwrite: true }) //Update user settings in the database with the newUserSettings
-                        .then(updated => {
-                            res.json({ message: "Settings saved successfully" }) //return success
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        })
+                User.updateOne(foundUser, newUserSettings, { overwrite: true }) //Update user settings in the database with the newUserSettings
+                    .then(updated => {
+                        res.json({ message: "Settings saved successfully" }) //return success
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
 
+                // Sends all cvs which need to be crawled in JSON format.
+                User.find({ newInfo: true })
+                    .then(foundUsers => manageCVs(foundUsers))
+                    .then(getCVsToCrawl)
+                    .then(cvs => activateCrawler(cvs));
+            }
+        }
+    })
+})
+
+const activateCrawler = async () => {
+
+}
+
+/**
+ * Returns all cvs with new Information.
+ */
+const getCVsToCrawl = async () => {
+    return CV.find({ newInfo: true });
+}
+
+/**
+ * Creates or updates cvs depending on if there is new information.
+ * @param {User} foundUsers All users with new cv Information.
+ */
+const manageCVs = async (foundUsers) => {
+    for (const item of foundUsers) {
+        const name = item.name;
+        const cvURL = item.cvURL;
+
+        await CV.findOne({ "name": name }, async function (err, foundCV) {
+            if (foundCV && foundCV.cvURL !== cvURL) {
+                CV.updateOne(foundCV, { $set: { 'cvURL': cvURL, 'newInfo': true } }, { overwrite: true })
+                    .then(console.log(name + " updated")
+                    ).catch(err => console.log(name + "'s cv can not be updated!"));
+
+            } else if (!foundCV) {
+                const newCV = new CV({
+                    name,
+                    cvURL,
+                    matchedCVs: [''],
+                    newInfo: true
+                })
+                try {
+                    newCV.save()
+                        .then(console.log(name + " created"))
+                } catch (err) {
+                    console.log(name + "'s cv can not be created!")
                 }
             }
-    })    
-})
+        })
+    }
+}
 
 
 /**
@@ -155,10 +208,10 @@ userIO.route('/deleteUser').post((req, res) => {
 /**
  * fetches the current user settings of a specific User and returns them
  */
-userIO.route('/getUserSettings').post((req,res) =>{
+userIO.route('/getUserSettings').post((req, res) => {
     const name = req.body.name;
     const cvURL = req.body.url;
-    User.findOne({"name" : name, "cvURL": cvURL}, function(err, foundUser){
+    User.findOne({ "name": name, "cvURL": cvURL }, function (err, foundUser) {
         res.send(foundUser);
     })
 })
@@ -170,7 +223,7 @@ userIO.route('/getUserSettings').post((req,res) =>{
  * returns all the current User entries in the DB
  */
 userIO.route('/getUsers').get((req, res) => {
-    User.find()  
+    User.find()
         .then(foundUsers => res.json(foundUsers));
 })
 

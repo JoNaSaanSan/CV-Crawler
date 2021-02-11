@@ -32,55 +32,9 @@ cvIO.use(function (req, res, next) {
 });
 
 
-/**
- * Sends all cvs which need to be crawled in JSON format.
- */
-cvIO.route('/getCVsToCrawl').get((req, res) => {
-    User.find({ newInfo: true })
-        .then(foundUsers => manageCVs(foundUsers))
-        .then(getCVsToCrawl)
-        .then(cvs => res.json(cvs));
-})
 
-/**
- * Returns all cvs with new Information.
- */
-const getCVsToCrawl = async () => {
-    return CV.find({ newInfo: true });
-}
 
-/**
- * Creates or updates cvs depending on if there is new information.
- * @param {User} foundUsers All users with new cv Information.
- */
-const manageCVs = async (foundUsers) => {
-    for (const item of foundUsers) {
-        const name = item.name;
-        const cvURL = item.cvURL;
 
-        await CV.findOne({ "name": name }, async function (err, foundCV) {
-            if (foundCV && foundCV.cvURL !== cvURL) {
-                CV.updateOne(foundCV, { $set: { 'cvURL': cvURL, 'newInfo': true } }, { overwrite: true })
-                    .then(console.log(name + " updated")
-                    ).catch(err => console.log(name + "'s cv can not be updated!"));
-
-            } else if (!foundCV) {
-                const newCV = new CV({
-                    name,
-                    cvURL,
-                    matchedCVs: [''],
-                    newInfo: true
-                })
-                try {
-                    newCV.save()
-                        .then(console.log(name + " created"))
-                } catch (err) {
-                    console.log(name + "'s cv can not be created!")
-                }
-            }
-        })
-    }
-}
 
 /**
  * Returns all cvs in JSON format.
