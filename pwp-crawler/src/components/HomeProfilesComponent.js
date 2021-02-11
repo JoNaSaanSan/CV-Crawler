@@ -13,7 +13,8 @@ class HomeProfilesComponent extends React.Component {
 
         this.state = {
             names: [],
-            currentName: ""
+            current: {name: "", email: "", cvURL: "", keywords: ""},
+            userInfo: []
         }
         this.getNamesFromDB = this.getNamesFromDB.bind(this)
         //this.openPopup = this.openPopup.bind(this)
@@ -23,11 +24,17 @@ class HomeProfilesComponent extends React.Component {
     componentDidMount() {
         this.getNamesFromDB();
         console.log("componentdidmount aufgerufen")
+        console.log("state userInfo" + this.state.userInfo)
     }
 
     openPopup(i){
-        this.setState({currentName: this.state.names[i]})
-        this.grid.updateLayout()
+        //this.state.current.name = this.state.names[i]
+        //this.setState({current: {name: this.state.names[i]}})
+        //this.setState({currentName: this.state.names[i]})
+        //this.grid.updateLayout()
+
+
+        this.setState({current:{name: this.state.userInfo[i].name, cvURL: this.state.userInfo[i].cvURL, keywords: this.state.userInfo[i].keywords}})
 
         document.querySelector('.bg-modal').style.display = "flex";
         window.scrollTo(0,0)
@@ -49,6 +56,8 @@ class HomeProfilesComponent extends React.Component {
           })
           .then(data => {
             console.log("Fetching Names...")
+            this.setState({userInfo: data})
+            /*
             let tempArr = [];
             // create names list
             for (var i = 0; i < data.length; i++) {
@@ -56,6 +65,7 @@ class HomeProfilesComponent extends React.Component {
             }
             this.setState({names: tempArr})
             console.log("temp Arrayyyy" + tempArr)
+            */
           }).catch(error => {
             console.log(error);
           });
@@ -74,8 +84,13 @@ class HomeProfilesComponent extends React.Component {
 
     showCards(){
         console.log("showCards")
+        /*
         return this.state.names.map((object, i) =>
             <div key={i} className = "cv-element" onClick={this.openPopup.bind(this, i)}> <CVComponent name={object}/></div>
+        )*/
+        return this.state.userInfo.map((object, i) =>
+            <div key={i} className = "cv-element" onClick={this.openPopup.bind(this, i)}> <CVComponent name={object.name}/></div>
+            
         )
         
     }
@@ -88,9 +103,9 @@ class HomeProfilesComponent extends React.Component {
                     <button className = "buttons">All Profiles</button>
                     <button className = "buttons">Matched Profiles</button>
                </div>
+                {console.log("state userInfo" + JSON.stringify(this.state.userInfo))}
 
-
-               <StackGrid columnWidth={350} className="stackgrid" gridRef={grid => this.grid = grid} monitorImagesLoaded = {true}>
+               <StackGrid gutterHeight={2} columnWidth={350} className="stackgrid" gridRef={grid => this.grid = grid} monitorImagesLoaded = {true}>
                 {this.showCards()}
                </StackGrid>
 
@@ -99,11 +114,19 @@ class HomeProfilesComponent extends React.Component {
                     <div class="modal-contents">
                         <div class="close" onClick={this.closePopup}>+</div>
                         <img className="profile-picture" src={profilepic} />
-                        <h1>{this.state.currentName}</h1>
-                        <p>max.mustermann@gmail.com</p>
-                        <a href="www.google.de">CV Website</a>
+                        <div className= "headline">
+                            <h1>{this.state.current.name}</h1>
+                        </div>
+                            <p>max.mustermann@gmx.de</p>
+                        <div className= "headline">
+                            <h4>CV Website</h4>
+                        </div>  
+                        <a href= {this.state.current.cvURL} rel="noreferrer">{this.state.current.cvURL}</a>
                         <hr/>
-                        <h3>Keywords</h3>
+                        <div className= "headline">
+                            <h4>Keywords</h4>
+                        </div>
+                        <p>{this.state.current.keywords + ""}</p>
                     </div>
                 </div>
 
@@ -113,5 +136,5 @@ class HomeProfilesComponent extends React.Component {
         )
     }
 }
-
+//<a href="www.google.de">CV Website</a>
 export default HomeProfilesComponent;
