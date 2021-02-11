@@ -18,7 +18,13 @@ class HomeProfilesComponent extends React.Component {
 
     openPopup() {
         document.querySelector('.bg-modal').style.display = "flex";
-        document.body.style.overflow = "hidden";
+        document.body.style.overflow = "";
+
+    }
+
+    openPopup1() {
+        document.querySelector('.bg-modalMail').style.display = "flex";
+        document.body.style.overflow = "";
 
     }
 
@@ -26,7 +32,12 @@ class HomeProfilesComponent extends React.Component {
         document.querySelector('.bg-modal').style.display = "none";
         document.body.style.overflow = "auto";
     }
-    
+
+    closePopup1() {
+        document.querySelector('.bg-modalMail').style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
 
     render() {
         return (
@@ -38,40 +49,40 @@ class HomeProfilesComponent extends React.Component {
 
                 <StackGrid columnWidth={350} className="stackgrid">
                     <div key="key1" className="cv-element" onClick={this.openPopup}>
-                        <CVComponent name="Max Mustermann" />
+                        <CVComponent firstName="Max Mustermann" />
                     </div>
                     <div key="key2" className="cv-element">
-                        <CVComponent name="Anja Scherer" />
+                        <CVComponent firstName="Anja Scherer" />
                     </div>
                     <div key="key3" className="cv-element">
-                        <CVComponent name="Simon Schmitz" />
+                        <CVComponent firstName="Simon Schmitz" />
                     </div>
                     <div key="key4" className="cv-element">
-                        <CVComponent name="Anna Huber" />
+                        <CVComponent firstName="Anna Huber" />
                     </div>
                     <div key="key5" className="cv-element">
-                        <CVComponent name="Miriam Schnitz" />
+                        <CVComponent firstName="Miriam Schnitz" />
                     </div>
                     <div key="key6" className="cv-element">
-                        <CVComponent name="Simon Hoffinger" />
+                        <CVComponent firstName="Simon Hoffinger" />
                     </div>
                     <div key="key7" className="cv-element">
-                        <CVComponent name="Thomas Riegner" />
+                        <CVComponent firstName="Thomas Riegner" />
                     </div>
                     <div key="key8" className="cv-element">
-                        <CVComponent name="Paula Oberacher" />
+                        <CVComponent firstName="Paula Oberacher" />
                     </div>
                     <div key="key9" className="cv-element">
-                        <CVComponent name="Johannes Niepe" />
+                        <CVComponent firstName="Johannes Niepe" />
                     </div>
                     <div key="key10" className="cv-element">
-                        <CVComponent name="Andreas Barth" />
+                        <CVComponent firstName="Andreas Barth" />
                     </div>
                     <div key="key11" className="cv-element">
-                        <CVComponent name="Veronika Wimmer" />
+                        <CVComponent firstName="Veronika Wimmer" />
                     </div>
                     <div key="key12" className="cv-element">
-                        <CVComponent name="Maximilian Randersdorfer" />
+                        <CVComponent firstName="Maximilian Randersdorfer" />
                     </div>
                 </StackGrid>
 
@@ -81,12 +92,24 @@ class HomeProfilesComponent extends React.Component {
                         <img className="profile-picture" src={profilepic} />
                         <h1>Max Mustermann</h1>
                         <p>max.mustermann@gmail.com</p>
-                        <a href="www.google.de">CV Website</a>
+                        <a target="_blank" href="http://google.de">CV Website</a>
                         <hr />
                         <h3>Keywords</h3>
-                        <MailForm firstName={""} email={"max.mustermann@gmail.com"} />
+                        <button onClick={this.closePopup, this.openPopup1} > Contact me </button>
                     </div>
                 </div>
+
+                <div class="bg-modalMail">
+                    <div class="modal-contentsMail">
+                        <div class="closeMail" onClick={this.closePopup1}>+</div>
+                        <div className="mailform">
+                            <MailForm receiverMailaddress={"max.mustermann@gmail.com"} />
+                        </div>
+                    </div>
+                </div>
+
+
+
 
             </div>
 
