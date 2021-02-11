@@ -128,7 +128,20 @@ cvIO.route('/setMatches').post((req, res) => {
                     .catch(err => {
                         console.log(err);
                     })
-
+                User.findOne({ "name": name, "cvURL": cvURL }, function (err, foundUser) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).send();
+                    } else {
+                        User.updateOne(foundUser, { $set: { 'newInfo': false } }, { overwrite: true })
+                            .then(updated => {
+                                res.status(200).send();
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
+                    }
+                })
             }
         }
 
