@@ -24,22 +24,27 @@ class CVComponent extends React.Component {
         var letters = '0123456789ABCDEF';
         var color = '#';
         for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
+            color += letters[Math.floor(Math.random() * 16)];
         }
         return color;
-      }
-      
-//style={{marginRight: spacing + 'em'}} 
-//style={{backgroundColor: this.getRandomColor()}, {height: this.getRandomHeight() + "px"}
+    }
+
+    //style={{marginRight: spacing + 'em'}} 
+    //style={{backgroundColor: this.getRandomColor()}, {height: this.getRandomHeight() + "px"}
 
     render() {
         const myStyle = {
             backgroundColor: this.getRandomColor(),
             height: this.getRandomHeight() + "px"
         }
+
+        console.log(this.props.key)
+
         return (
-            <div className="cv_container"  style={myStyle}>
-               <h1 className="cv-name">{this.props.name}</h1>
+            <div className="cv_container" style={myStyle}>
+                <h1 className="cv-name">
+                    {this.props.profile.firstName} {this.props.profile.lastName}
+                </h1>
             </div>
 
 

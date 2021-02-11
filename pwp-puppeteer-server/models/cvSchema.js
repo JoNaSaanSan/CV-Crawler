@@ -23,4 +23,3 @@ const cvSchema = new Schema(
 
 const CV = mongoose.model('CV', cvSchema);
 module.exports = CV;
-

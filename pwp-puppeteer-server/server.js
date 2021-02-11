@@ -33,7 +33,7 @@ db.once('open', function () {
     // we're connected!
 });
 */
-//my database, should have access from any ip 
+//test database, should have access from any ip 
 mongoose.connect("mongodb+srv://iris:iris123@mycluster1.7zdgt.mongodb.net/UserSettings?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
 
 
@@ -54,31 +54,35 @@ app.listen(port, () => {
     console.log(`CV App listening at http://localhost:${port}`)
 })
 
-// makes a pdf from the users cv Page and sends it back to him
+/**
+ * makes a PDF from the user's CV page and returns it 
+ */
 app.post('/downloadCV', (req, res) => {
     const cvURL = req.body.url;
     printPDF(cvURL).then(result => {
-        res.set({ 'Content-Type': 'application/pdf', 'Content-Length': result.length })
-        res.send(result)
+        res.set({ 'Content-Type': 'application/pdf', 'Content-Length': result.length }) //sets the header
+        res.send(result) //sends response
     }).catch(console.error);
-    console.log("Received HTML as PDF request")
 })
 
-//sends the PDF with the CV back to the Client 
+/**
+ * returns the the PDF with the CV 
+ */
 app.get('/fetch-pdf', (req, res) => {
     res.sendFile(`${__dirname}/myCV.pdf`)
 })
 
 
-//prints PDF to mypdf.pdf (is overwritten everytime)
+/**
+ * prints PDF from URL to myCV.pdf (is overwritten everytime) and returns the pdf 
+ */
 async function printPDF(url) {
     try {
-        const browser = await puppeteer.launch({ headless: true });
-        const page = await browser.newPage();
-        await page.goto(url, { waitUntil: 'networkidle0' });
-        //await page.addStyleTag({content: '.nav {display:none} .navbar {border:0px} '})
-        const pdf = await page.pdf({ path: 'myCV.pdf', format: 'A4' });
-        await browser.close();
+        const browser = await puppeteer.launch({ headless: true }); //launch Puppeteer
+        const page = await browser.newPage(); //open URL
+        await page.goto(url, { waitUntil: 'networkidle0' }); //wait until the page is completely loaded
+        const pdf = await page.pdf({ path: 'myCV.pdf', format: 'A4' }); //generate pdf from page
+        await browser.close(); //close browser
         return pdf;
 
     } catch (e) {
