@@ -83,7 +83,7 @@ const manageCVs = async (foundUsers) => {
 }
 
 /**
- * Returns all cvs.
+ * Returns all cvs in JSON format.
  */
 cvIO.route('/getAllCVs').get((req, res) => {
     CV.find()
@@ -91,7 +91,7 @@ cvIO.route('/getAllCVs').get((req, res) => {
 })
 
 /**
- * Returns already crawled cvs.
+ * Returns already crawled cvs in JSON format.
  */
 cvIO.route('/getCrawledCVs').get((req, res) => {
     CV.find({ newInfo: false })
@@ -99,11 +99,31 @@ cvIO.route('/getCrawledCVs').get((req, res) => {
 })
 
 /**
- * Returns all cvs with no matches yet.
+ * Returns all cvs with no matches yet in JSON format.
  */
 cvIO.route('/getNotMatchedCVs').get((req, res) => {
     CV.find({ matchedCVs: [''] })
         .then(foundCVs => res.json(foundCVs));
+})
+
+/**
+ * Returns all all keywords for a requested cv in JSON format.
+ */
+cvIO.route('/getKeywordsForCV').get((req, res) => {
+    const name = req.body.name;
+    const cvURL = req.body.cvURL;
+    User.findOne({ 'name': name, 'cvURL': cvURL }, function (err, foundUser) {
+        if (err) {
+            console.log(err);
+            res.status(500).send();
+        } else {
+            if (!foundUser) {
+                res.status(404).send();
+            } else {
+                res.send([{ 'name': name, 'cvURL': cvURL, 'keywords': foundUser.keywords }])
+            }
+        }
+    })
 })
 
 /**
