@@ -2,6 +2,7 @@ var express = require('express');
 var userIO = express.Router();
 
 const mongoose = require('mongoose');
+const axios = require('axios');
 
 // Make Mongoose use `findOneAndUpdate()`.
 mongoose.set('useFindAndModify', false);
@@ -44,13 +45,15 @@ userIO.route('/userRegistration').post((req, res) => {
         User.findOne({ "email": email }, function (err, foundEmail) { //see if User with this mail already exists
             User.findOne({ "name": name }, function (err, foundName) { //see if User with this namealready exists
                 User.findOne({ "cvURL": cvURL }, function (err, foundCVURL) { //see if User with this cvurl already exists
-                    if (foundEmail || foundName || foundCVURL) {  // add foundEmail after testing!
+                    if (foundName || foundCVURL) {  // add foundEmail after testing!
                         res.json({ message: "User with this name, email or URL already exists!" }); //return error message
                     } else {
                         newUser.save()
                             .then(newUser => {
                                 res.json({ message: "User saved successfully" }) //returns success msg after successfully saving the user
+                                activateCrawler(newUser);
                             })
+                            
                             .catch(err => {
                                 console.log(err);
                             })
@@ -118,6 +121,7 @@ userIO.route('/updateSettings').post((req, res) => {
                 User.updateOne(foundUser, newUserSettings, { overwrite: true }) //Update user settings in the database with the newUserSettings
                     .then(updated => {
                         res.json({ message: "Settings saved successfully" }) //return success
+                        if(foundUser.newInfo === true){activateCrawler(foundUser)}
                     })
                     .catch(err => {
                         console.log(err);
@@ -133,9 +137,25 @@ userIO.route('/updateSettings').post((req, res) => {
     })
 })
 
-const activateCrawler = async () => {
-
+//ist jetzt momentan nur für einen User deswegen hab ich oben die zwei Zeilen auskommentiert 
+const activateCrawler = async (user) => {
+   const userdata = {
+    name: user.name,
+    url: user.cvURL,
+    id: user._id,
+    newInfo: user.newInfo
+   }
+   console.log(userdata)
+ axios.post('https://pwp.um.ifi.lmu.de/g10/crawl', userdata)
+ .then((res) =>{
+     console.log(`statuscode: ${res.statuscode}`)
+     console.log(res)
+ })
+ .catch((error) =>{
+     console.error(error)
+ })
 }
+
 
 /**
  * Returns all cvs with new Information.
