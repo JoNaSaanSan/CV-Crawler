@@ -5,13 +5,14 @@ import axios from "axios"
 
 export class MailForm extends Component {
 
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
 
         this.state = {
             firstName: "",
             lastName: "",
-            email: "",
+            senderMailaddress: "",
+            receiverMailaddress: this.props.receiverMailaddress,
             message: "",
         }
 
@@ -35,9 +36,17 @@ export class MailForm extends Component {
     }
 
     // Setting the email address of the sender
-    handleEmail = (e) => {
+    handleSenderMail = (e) => {
         this.setState({
-            email: e.target.value
+            senderMailaddress: e.target.value
+
+        })
+    }
+
+    // Setting the email address of the sender
+    handleReceiverMail = (e) => {
+        this.setState({
+            receiverMailaddress: e.target.value
 
         })
     }
@@ -59,7 +68,8 @@ export class MailForm extends Component {
         const mailData = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
-            email: this.state.email,
+            senderMailaddress: this.state.senderMailaddress,
+            receiverMailaddress: this.state.receiverMailaddress,
             message: this.state.message
         }
 
@@ -88,7 +98,8 @@ export class MailForm extends Component {
         this.setState({
             firstName: "",
             lastName: "",
-            email: "",
+            senderMailaddress: "",
+            // receiverMailaddress: "",
             message: "",
         })
     }
@@ -124,14 +135,27 @@ export class MailForm extends Component {
                     </div>
 
                     <div className="singleItem">
-                        <label htmlFor="email">Email:</label>
+                        <label htmlFor="email">Email sender:</label>
                         <input
                             type="text"
                             name="email"
                             className="email"
                             placeholder="Your email"
-                            value={this.state.email}
-                            onChange={this.handleEmail}
+                            value={this.state.senderMailaddress}
+                            onChange={this.handleSenderMail}
+                            required
+                        />
+                    </div>
+
+                    <div className="singleItem">
+                        <label htmlFor="email">Email receiver:</label>
+                        <input
+                            type="text"
+                            name="email"
+                            className="email"
+                            placeholder="Target email"
+                            value={this.props.receiverMailaddress}
+                            onChange={""}
                             required
                         />
                     </div>

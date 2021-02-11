@@ -47,15 +47,16 @@ contactEmail.verify((error) => {
 router.post("/contact", (req, res) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
-    const email = req.body.email;
+    const senderMailaddress = req.body.senderMailaddress;
+    const receiverMailaddress = req.body.receiverMailaddress;
     const message = req.body.message;
 
     const mail = {
         // from: lastName,
-        to: "cvcrawler@gmail.com",
+        to: receiverMailaddress,
         subject: "CV Contact",
         html: `<p>Name: ${firstName} ${lastName}</p><p>Email: 
-        ${email}</p><p>Message: ${message}</p>`,
+        ${senderMailaddress}</p><p>Message: ${message}</p>`,
     };
 
     // Status about the sent mail 
