@@ -7,7 +7,7 @@ export class ContactUsComponent extends Component {
         return (
             <div className="profile-page">
                 {/* <div className="contact-us"> */}
-                <MailForm />
+                <MailForm receiverMailaddress={"cvcrawler@gmail.com"} hallo={"hallo"} />
                 {/* </div> */}
             </div>
         )
