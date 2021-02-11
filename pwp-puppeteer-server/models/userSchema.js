@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+/**
+ * Represents a user in the cv matching service.
+ */
 const userSchema = new Schema({
     name: {
         type: String,
@@ -12,13 +15,13 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
-/*    email: {
+    email: {
         type: String,
         required: true,
         unique: true
- },*/
+    },
     keywords: [String],
-    emailLimit: Number, 
+    emailLimit: Number,
     newInfo: Boolean
 });
 
