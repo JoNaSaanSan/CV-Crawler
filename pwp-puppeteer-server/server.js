@@ -77,17 +77,20 @@ app.get('/fetch-pdf', (req, res) => {
  * prints PDF from URL to myCV.pdf (is overwritten everytime) and returns the pdf 
  */
 async function printPDF(url) {
+    return new Promise(async(resolve,reject) =>{
     try {
         const browser = await puppeteer.launch({ headless: true }); //launch Puppeteer
         const page = await browser.newPage(); //open URL
         await page.goto(url, { waitUntil: 'networkidle0' }); //wait until the page is completely loaded
         const pdf = await page.pdf({ path: 'myCV.pdf', format: 'A4' }); //generate pdf from page
+        console.log('PDF created!')
         await browser.close(); //close browser
-        return pdf;
+        return resolve(pdf);
 
     } catch (e) {
         console.log('Error', e)
-    }
+        return reject(e)
+    }})
 }
 
 

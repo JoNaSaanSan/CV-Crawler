@@ -127,7 +127,7 @@ handleDelete = (event) => {
  * sends the Registration request
  * (called when register button is clicked)
  */
-handleSubmit = (event) =>{
+handleRegistration = (event) =>{
     console.log(this.state);
     event.preventDefault();
     const userRegistration = {
@@ -274,7 +274,7 @@ saveSettings = (event) => {
                         { this.state.loggedIn && this.state.isSignedIn ?
                         <div></div>:
                         <div>
-                            <Button variant="contained" onClick={this.handleSubmit} color="primary">Register</Button>
+                            <Button variant="contained" onClick={this.handleRegistration} color="primary">Register</Button>
                         </div>
                         }
                         { this.state.loggedIn && this.state.isSignedIn ?
