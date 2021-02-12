@@ -32,58 +32,12 @@ cvIO.use(function (req, res, next) {
 });
 
 
-/**
- * Sends all cvs which need to be crawled in JSON format.
- */
-cvIO.route('/getCVsToCrawl').get((req, res) => {
-    User.find({ newInfo: true })
-        .then(foundUsers => manageCVs(foundUsers))
-        .then(getCVsToCrawl)
-        .then(cvs => res.json(cvs));
-})
+
+
+
 
 /**
- * Returns all cvs with new Information.
- */
-const getCVsToCrawl = async () => {
-    return CV.find({ newInfo: true });
-}
-
-/**
- * Creates or updates cvs depending on if there is new information.
- * @param {User} foundUsers All users with new cv Information.
- */
-const manageCVs = async (foundUsers) => {
-    for (const item of foundUsers) {
-        const name = item.name;
-        const cvURL = item.cvURL;
-
-        await CV.findOne({ "name": name }, async function (err, foundCV) {
-            if (foundCV && foundCV.cvURL !== cvURL) {
-                CV.updateOne(foundCV, { $set: { 'cvURL': cvURL, 'newInfo': true } }, { overwrite: true })
-                    .then(console.log(name + " updated")
-                    ).catch(err => console.log(name + "'s cv can not be updated!"));
-
-            } else if (!foundCV) {
-                const newCV = new CV({
-                    name,
-                    cvURL,
-                    matchedCVs: [''],
-                    newInfo: true
-                })
-                try {
-                    newCV.save()
-                        .then(console.log(name + " created"))
-                } catch (err) {
-                    console.log(name + "'s cv can not be created!")
-                }
-            }
-        })
-    }
-}
-
-/**
- * Returns all cvs.
+ * Returns all cvs in JSON format.
  */
 cvIO.route('/getAllCVs').get((req, res) => {
     CV.find()
@@ -91,7 +45,7 @@ cvIO.route('/getAllCVs').get((req, res) => {
 })
 
 /**
- * Returns already crawled cvs.
+ * Returns already crawled cvs in JSON format.
  */
 cvIO.route('/getCrawledCVs').get((req, res) => {
     CV.find({ newInfo: false })
@@ -99,11 +53,31 @@ cvIO.route('/getCrawledCVs').get((req, res) => {
 })
 
 /**
- * Returns all cvs with no matches yet.
+ * Returns all cvs with no matches yet in JSON format.
  */
 cvIO.route('/getNotMatchedCVs').get((req, res) => {
     CV.find({ matchedCVs: [''] })
         .then(foundCVs => res.json(foundCVs));
+})
+
+/**
+ * Returns all all keywords for a requested cv in JSON format.
+ */
+cvIO.route('/getKeywordsForCV').get((req, res) => {
+    const name = req.body.name;
+    const cvURL = req.body.cvURL;
+    User.findOne({ 'name': name, 'cvURL': cvURL }, function (err, foundUser) {
+        if (err) {
+            console.log(err);
+            res.status(500).send();
+        } else {
+            if (!foundUser) {
+                res.status(404).send();
+            } else {
+                res.send([{ 'name': name, 'cvURL': cvURL, 'keywords': foundUser.keywords }])
+            }
+        }
+    })
 })
 
 /**
@@ -128,7 +102,20 @@ cvIO.route('/setMatches').post((req, res) => {
                     .catch(err => {
                         console.log(err);
                     })
-
+                User.findOne({ "name": name, "cvURL": cvURL }, function (err, foundUser) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).send();
+                    } else {
+                        User.updateOne(foundUser, { $set: { 'newInfo': false } }, { overwrite: true })
+                            .then(updated => {
+                                res.status(200).send();
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
+                    }
+                })
             }
         }
 

@@ -1,6 +1,5 @@
 import './App.css';
 import HeaderComponent from './components/HeaderComponent';
-import HomeComponent from './components/HomeComponent';
 import HomeProfilesComponent from './components/HomeProfilesComponentNew';
 import { Route, Switch } from 'react-router-dom';
 import ProfileComponent from './components/ProfileComponent';
