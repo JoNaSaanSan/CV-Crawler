@@ -24,6 +24,7 @@
 
 .cv-element{
     width: 97%;
+    cursor: pointer;
     
 }
 
@@ -76,4 +77,22 @@ hr {
 
 .headline{
     margin-bottom: -5%;
+}
+
+/* Cardlayout*/
+
+.cards_container{
+    width: 85%;
+    height: 500px;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    margin-right: 7.5%;
+    margin-left: 7.5%;
+}
+
+.column{
+    width: 30%;
+    height: 500px;
+    margin: 5px;
 }

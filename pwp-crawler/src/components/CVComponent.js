@@ -11,26 +11,13 @@ class CVComponent extends React.Component {
         }
 
     }
-    getRandomHeight() {
-        var max = 400;
-        var min = 150;
-        return Math.random() * (max - min) + min;
-    }
 
-    getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-      }
 
     render() {
         //styling of div container
         const myStyle = {
-            backgroundColor: this.getRandomColor(),
-            height: this.getRandomHeight() + "px"
+            backgroundColor: this.props.color,
+            height: this.props.height + "px"
         }
         return (
             <div className="cv_container"  style={myStyle}>
