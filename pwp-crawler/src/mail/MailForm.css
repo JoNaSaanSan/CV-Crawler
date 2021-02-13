@@ -8,7 +8,6 @@
   background-color: white;
   margin: 100px auto;
   width: 90%;
-  box-shadow: 1px 1px 4px 1px lightgrey;
   border-radius: 15px;
 }
 
@@ -19,6 +18,7 @@
 
 .container label {
   display: block;
+  font-size: 1em;
   /* margin-bottom: 3px; */
 }
 
@@ -27,8 +27,8 @@
   width: 100%;
   margin: 0 auto;
   padding: 10px;
+  background-color: #dddddd;
   border: none;
-  box-shadow: 1px 1px 4px 1px rgb(58, 57, 58);
   border-radius: 15px;
 }
 
@@ -57,18 +57,17 @@
   cursor: pointer;
   outline: none;
   color: #fff;
-  background-color: rgb(43, 32, 54);
+  background-color: rgb(98, 212, 241);
   border: none;
   border-radius: 15px;
-  box-shadow: 0 5px #999;
 }
 
 .btn:hover {
-  background-color: rgb(83, 62, 104);
+  background-color: rgb(57, 120, 136);
 }
 
 .btn:active {
-  background-color: rgb(43, 32, 54);
+  background-color: rgb(53, 88, 240);
   box-shadow: 0 5px #666;
   transform: translateY(4px);
 }

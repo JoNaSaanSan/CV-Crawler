@@ -149,7 +149,7 @@ class HomeProfilesComponent extends React.Component {
                         </div>
                         <p className= "text">{this.state.current.keywords + ""}</p>
                         <button onClick={this.closePopup, this.openPopup1} > Contact me </button>
-
+                        
                     </div>
                 </div>
 
