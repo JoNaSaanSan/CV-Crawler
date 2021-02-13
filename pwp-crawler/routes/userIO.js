@@ -29,6 +29,7 @@ userIO.use(function (req, res, next) {
     next();
 });
 
+
 /**
  * saves a new User with a name, email and CVURL to the database 
  */
@@ -36,24 +37,29 @@ userIO.route('/userRegistration').post((req, res) => {
     const name = req.body.name;
     const cvURL = req.body.url;
     const email = req.body.email;
+    const newInfo = req.body.newInfo;
     const newUser = new User({
         name,
         email,
-        cvURL
+        cvURL,
+        newInfo
     })
     if (name != '' && cvURL != '' && email != '') {  //If required variables are not empty
         User.findOne({ "email": email }, function (err, foundEmail) { //see if User with this mail already exists
             User.findOne({ "name": name }, function (err, foundName) { //see if User with this namealready exists
                 User.findOne({ "cvURL": cvURL }, function (err, foundCVURL) { //see if User with this cvurl already exists
-                    if (foundName || foundCVURL) {  // add foundEmail after testing!
+                    if (foundEmail || foundName || foundCVURL) {  // add foundEmail after testing!
                         res.json({ message: "User with this name, email or URL already exists!" }); //return error message
                     } else {
                         newUser.save()
                             .then(newUser => {
                                 res.json({ message: "User saved successfully" }) //returns success msg after successfully saving the user
-                                activateCrawler(newUser);
+                                User.find({ newInfo: true })
+                                    .then(foundUsers => manageCVs(foundUsers))
+                                    .then(getCVsToCrawl)
+                                    .then(cvs => activateCrawler(cvs))
                             })
-                            
+
                             .catch(err => {
                                 console.log(err);
                             })
@@ -121,39 +127,44 @@ userIO.route('/updateSettings').post((req, res) => {
                 User.updateOne(foundUser, newUserSettings, { overwrite: true }) //Update user settings in the database with the newUserSettings
                     .then(updated => {
                         res.json({ message: "Settings saved successfully" }) //return success
-                        if(foundUser.newInfo === true){activateCrawler(foundUser)}
+                        //if(foundUser.newInfo === true){activateCrawler(foundUser)}
+                        User.find({ newInfo: true })
+                            .then(foundUsers => manageCVs(foundUsers))
+                            .then(getCVsToCrawl)
+                            .then(cvs => activateCrawler(cvs))
                     })
                     .catch(err => {
                         console.log(err);
                     })
-
-                // Sends all cvs which need to be crawled in JSON format.
-                User.find({ newInfo: true })
-                    .then(foundUsers => manageCVs(foundUsers))
-                    .then(getCVsToCrawl)
-                    .then(cvs => activateCrawler(cvs));
             }
         }
     })
 })
 
-//ist jetzt momentan nur für einen User deswegen hab ich oben die zwei Zeilen auskommentiert 
-const activateCrawler = async (user) => {
-   const userdata = {
-    name: user.name,
-    url: user.cvURL,
-    id: user._id,
-    newInfo: user.newInfo
-   }
-   console.log(userdata)
- axios.post('https://pwp.um.ifi.lmu.de/g10/crawl', userdata)
- .then((res) =>{
-     console.log(`statuscode: ${res.statuscode}`)
-     console.log(res)
- })
- .catch((error) =>{
-     console.error(error)
- })
+/**
+ * Function that sends a POST request to the crawler group with all current users that need to be crawled
+ * @param {*} userCVs all entries of the CV database that have new Info
+ */
+const activateCrawler = async (userCVs) => {
+    const userarray = [];
+    userCVs.forEach(user => {
+        const userdata = {
+            name: user.name,
+            cvURL: user.cvURL,
+            newInfo: user.newInfo
+        }
+        userarray.push(userdata);
+    });
+    console.log(userarray)
+    axios.post('https://pwp.um.ifi.lmu.de/g10/crawl', userarray)
+        .then((res) => {
+            console.log(`statuscode: ${res.statuscode}`)
+            console.log(res)
+            //alle newInfo wieder auf false setzen? 
+        })
+        .catch((error) => {
+            console.error(error)
+        })
 }
 
 
