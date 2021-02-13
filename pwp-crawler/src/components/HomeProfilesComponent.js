@@ -32,14 +32,17 @@ class HomeProfilesComponent extends React.Component {
         document.querySelector('.bg-modal').style.display = "flex";
         window.scrollTo(0,0)
         //disable scrolling
-        //document.body.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
     }
 
     showMailingService(){
         document.getElementById('mailform').style.visibility = 'visible';
         //adjust pop-up height to include mailing service
-        document.querySelector('.modal-contents').style.height = "1000px";
+        document.querySelector('.modal-contents').style.height = "1150px";
         document.getElementById('contact_button').style.visibility = 'collapse';
+        document.querySelector('.bg-modal').style.height = "150%"
+        //enable scrolling
+        document.body.style.overflow = "auto";
         
     }
 
@@ -47,6 +50,11 @@ class HomeProfilesComponent extends React.Component {
         document.querySelector('.bg-modal').style.display = "none";
         //enable scrolling
         document.body.style.overflow = "auto";
+        document.getElementById('mailform').style.visibility = 'hidden';
+        //adjust pop-up height to include mailing service
+        document.querySelector('.modal-contents').style.height = "590px";
+        document.getElementById('contact_button').style.visibility = 'visible';
+        document.querySelector('.bg-modal').style.height = "100%"
     }
 
     
