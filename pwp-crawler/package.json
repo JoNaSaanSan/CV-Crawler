@@ -1,6 +1,7 @@
 {
   "name": "pwp-crawler",
   "version": "0.1.0",
+  "homepage": ".",
   "private": true,
   "proxy": "http://localhost:3001",
   "dependencies": {
@@ -9,7 +10,11 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
+    "cors": "^2.8.5",
     "file-saver": "^2.0.5",
+    "html-pdf": "^2.2.0",
+    "mongoose": "^5.11.16",
+    "path": "^0.12.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-google-login": "^5.2.2",

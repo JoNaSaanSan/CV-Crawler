@@ -29,6 +29,7 @@ userIO.use(function (req, res, next) {
     next();
 });
 
+
 /**
  * saves a new User with a name, email and CVURL to the database 
  */
@@ -53,12 +54,12 @@ userIO.route('/userRegistration').post((req, res) => {
                         newUser.save()
                             .then(newUser => {
                                 res.json({ message: "User saved successfully" }) //returns success msg after successfully saving the user
-                                User.find({newInfo: true})
-                                 .then(foundUsers => manageCVs(foundUsers))
-                                 .then(getCVsToCrawl)
-                                 .then(cvs => activateCrawler(cvs))
+                                User.find({ newInfo: true })
+                                    .then(foundUsers => manageCVs(foundUsers))
+                                    .then(getCVsToCrawl)
+                                    .then(cvs => activateCrawler(cvs))
                             })
-                            
+
                             .catch(err => {
                                 console.log(err);
                             })
@@ -127,10 +128,10 @@ userIO.route('/updateSettings').post((req, res) => {
                     .then(updated => {
                         res.json({ message: "Settings saved successfully" }) //return success
                         //if(foundUser.newInfo === true){activateCrawler(foundUser)}
-                        User.find({newInfo: true})
-                        .then(foundUsers => manageCVs(foundUsers))
-                        .then(getCVsToCrawl)
-                        .then(cvs => activateCrawler(cvs))
+                        User.find({ newInfo: true })
+                            .then(foundUsers => manageCVs(foundUsers))
+                            .then(getCVsToCrawl)
+                            .then(cvs => activateCrawler(cvs))
                     })
                     .catch(err => {
                         console.log(err);
@@ -151,19 +152,19 @@ const activateCrawler = async (userCVs) => {
             name: user.name,
             cvURL: user.cvURL,
             newInfo: user.newInfo
-           }
-           userarray.push(userdata);
+        }
+        userarray.push(userdata);
     });
-   console.log(userarray)
- axios.post('https://pwp.um.ifi.lmu.de/g10/crawl', userarray)
- .then((res) =>{
-     console.log(`statuscode: ${res.statuscode}`)
-     console.log(res)
-     //alle newInfo wieder auf false setzen? 
- })
- .catch((error) =>{
-     console.error(error)
- })
+    console.log(userarray)
+    axios.post('https://pwp.um.ifi.lmu.de/g10/crawl', userarray)
+        .then((res) => {
+            console.log(`statuscode: ${res.statuscode}`)
+            console.log(res)
+            //alle newInfo wieder auf false setzen? 
+        })
+        .catch((error) => {
+            console.error(error)
+        })
 }
 
 
