@@ -1,7 +1,8 @@
 import './App.css';
 import HeaderComponent from './components/HeaderComponent';
 import HomeProfilesComponent from './components/HomeProfilesComponentNew';
-import { Route, Switch } from 'react-router-dom';
+import { Row, Col, Nav } from 'react-bootstrap';
+import { HashRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import ProfileComponent from './components/ProfileComponent';
 import ContactUsComponent from "./components/ContactUsComponent"
 
@@ -11,10 +12,14 @@ function App() {
     <main>
       <HeaderComponent />
       <Switch>
-        <Route path="/" component={HomeProfilesComponent} exact />
-        <Route path="/profile" component={ProfileComponent} />
-        <Route path="/contact" component={ContactUsComponent} />
-        <Route component={Error} />
+        <Route>
+          <Nav.Link as={Link} to="https://pwp.um.ifi.lmu.de/g03/" component={HomeProfilesComponent} exact /></Route>
+        <Route>
+          <Nav.Link as={Link} to="https://pwp.um.ifi.lmu.de/g03/profile" component={ProfileComponent} /> </Route>
+        <Route>
+          <Nav.Link as={Link} to="https://pwp.um.ifi.lmu.de/g03/contact" component={ContactUsComponent} /></Route>
+        <Route>
+          <Nav.Link as={Link} to={Error} /> </Route>
       </Switch>
     </main>
   );

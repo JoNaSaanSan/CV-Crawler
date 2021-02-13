@@ -1,6 +1,7 @@
 {
   "name": "pwp-crawler",
   "version": "0.1.0",
+  "homepage": "/g03/",
   "private": true,
   "proxy": "http://localhost:3001",
   "dependencies": {
@@ -9,7 +10,11 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
+    "cors": "^2.8.5",
     "file-saver": "^2.0.5",
+    "html-pdf": "^2.2.0",
+    "mongoose": "^5.11.16",
+    "path": "^0.12.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-google-login": "^5.2.2",
@@ -22,8 +27,8 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "PUBLIC_URL=https://pwp.um.ifi.lmu.de/g03 react-scripts start",
+    "build": "PUBLIC_URL=https://pwp.um.ifi.lmu.de/g03 react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
