@@ -1,7 +1,7 @@
 {
   "name": "pwp-crawler",
   "version": "0.1.0",
-  "homepage": ".",
+  "homepage": "/g03/",
   "private": true,
   "proxy": "http://localhost:3001",
   "dependencies": {
@@ -27,8 +27,8 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "PUBLIC_URL=https://pwp.um.ifi.lmu.de/g03 react-scripts start",
+    "build": "PUBLIC_URL=https://pwp.um.ifi.lmu.de/g03 react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -13,11 +13,11 @@ function App() {
       <HeaderComponent />
       <Switch>
         <Route>
-          <Nav.Link as={Link} to="/" component={HomeProfilesComponent} exact /></Route>
+          <Nav.Link as={Link} to="https://pwp.um.ifi.lmu.de/g03/" component={HomeProfilesComponent} exact /></Route>
         <Route>
-          <Nav.Link as={Link} to="/profile" component={ProfileComponent} /> </Route>
+          <Nav.Link as={Link} to="https://pwp.um.ifi.lmu.de/g03/profile" component={ProfileComponent} /> </Route>
         <Route>
-          <Nav.Link as={Link} to="/contact" component={ContactUsComponent} /></Route>
+          <Nav.Link as={Link} to="https://pwp.um.ifi.lmu.de/g03/contact" component={ContactUsComponent} /></Route>
         <Route>
           <Nav.Link as={Link} to={Error} /> </Route>
       </Switch>
