@@ -32,17 +32,15 @@ class HomeProfilesComponent extends React.Component {
         document.querySelector('.bg-modal').style.display = "flex";
         window.scrollTo(0,0)
         //disable scrolling
-        document.body.style.overflow = "hidden";
+        //document.body.style.overflow = "hidden";
     }
 
     showMailingService(){
-        //document.getElementById('mailform').style.visibility = 'visible';
-    }
-
-    openPopup1() {
-        document.querySelector('.bg-modalMail').style.display = "flex";
-        document.body.style.overflow = "";
-
+        document.getElementById('mailform').style.visibility = 'visible';
+        //adjust pop-up height to include mailing service
+        document.querySelector('.modal-contents').style.height = "1000px";
+        document.getElementById('contact_button').style.visibility = 'collapse';
+        
     }
 
     closePopup() {
@@ -110,10 +108,6 @@ class HomeProfilesComponent extends React.Component {
         )))
     }
 
-    closePopup1() {
-        document.querySelector('.bg-modalMail').style.display = "none";
-        document.body.style.overflow = "auto";
-    }
 
 
     render() {
@@ -152,8 +146,10 @@ class HomeProfilesComponent extends React.Component {
                             <h4>Keywords</h4>
                         </div>
                         <p className= "text">{this.state.current.keywords + ""}</p>
-                        <button onClick={this.showMailingService}> Contact me </button>
-                        <MailForm receiverMailaddress={this.state.current.email} id = "mailform" visibility = 'hidden'/>
+                        <button onClick={this.showMailingService} id="contact_button"> Contact me </button>
+                        <div id = "mailform">
+                            <MailForm receiverMailaddress={this.state.current.email}  />
+                        </div>
                     </div>
                 </div>
 

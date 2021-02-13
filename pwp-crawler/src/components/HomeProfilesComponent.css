@@ -46,7 +46,7 @@
 }
 
 .modal-contents {
-
+  height: 550px;
 	width: 600px;
 	background-color: white;
 	text-align: center;
@@ -118,43 +118,11 @@ hr {
 }
 
 
-.modal-contentsMail {
-  height: 750px;
-  width: 600px;
-  background-color: rgb(43, 32, 54);
-  /* background-color: white; */
-  text-align: center;
-  /* padding-bottom: 2cm; */
-  /* margin-top: 0px; */
-  margin-bottom: 25cm;
-  margin-top: 1cm;
-  padding-bottom: 0cm;
-  padding-top: -2cm;
-  position: relative;
-  border-radius: 30px;
-}
-
-
-
-.closeMail {
-  position: absolute;
-  top: 0;
-  right: 10px;
-  font-size: 42px;
-  color: white;
-  transform: rotate(45deg);
-  cursor: pointer;
-  margin-top: 0cm;
-  padding-top: 0cm;
-}
-
-
-
-
 /* Mailform */
 
 #mailform {
   visibility: hidden;
+  margin-top: -25%;
 }
 
 .btnContactMe {
