@@ -6,9 +6,7 @@ export class ContactUsComponent extends Component {
     render() {
         return (
             <div className="profile-page">
-                {/* <div className="contact-us"> */}
-                <MailForm receiverMailaddress={"cvcrawler@gmail.com"} hallo={"hallo"} />
-                {/* </div> */}
+                <MailForm receiverMailaddress={"cvcrawler@gmail.com"} />
             </div>
         )
     }

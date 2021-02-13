@@ -1,74 +1,62 @@
 const profilesData = [
     {
         id: 1,
-        firstName: "Max",
-        lastName: "Mustermann",
+        name: "Max Mustermann",
         eMail: "max.mustermann@gmail.com"
     },
     {
         id: 2,
-        firstName: "Anja",
-        lastName: "Scherer",
-        eMail: "anja.scherer@gmail.com"
+        name: "Anja Scherer",
+        eMail: "cvcrawler@gmail.com"
     },
     {
         id: 3,
-        firstName: "Simon",
-        lastName: "Schmitz",
-        eMail: "simon.schmitz@gmail.com"
+        name: "Simon Schmitz",
+        eMail: "koblaa96@gmx.de"
     },
     {
         id: 4,
-        firstName: "Anna",
-        lastName: "Huber",
+        name: "Anna Huber",
         eMail: "anna.huber@gmail.com"
     },
     {
         id: 5,
-        firstName: "Miriam",
-        lastName: "Schnitz",
+        name: "Miriam Schnitz",
         eMail: "miriam.schnitz@gmail.com"
     },
     {
         id: 6,
-        firstName: "Simon",
-        lastName: "Hoffinger",
+        name: "Simon Hoffinger",
         eMail: "simon.hoffiner@gmail.com"
     },
     {
         id: 7,
-        firstName: "Thomas",
-        lastName: "Riegner",
+        name: "Thomas Riegner",
         eMail: "thomas.riegner@gmail.com"
     },
     {
         id: 8,
-        firstName: "Paula",
-        lastName: "Oberacher",
+        name: "Paula Oberacher",
         eMail: "paula.oberacher@gmail.com"
     },
     {
         id: 9,
-        firstName: "Johannes",
-        lastName: "Niepe",
+        name: "Johannes Niepe",
         eMail: "johannes.niepe@gmail.com"
     },
     {
         id: 10,
-        firstName: "Andreas",
-        lastName: "Barth",
+        name: "Andreas Barth",
         eMail: "andreas.barth@gmail.com"
     },
     {
         id: 11,
-        firstName: "Veronika",
-        lastName: "Wimmer",
+        name: "Veronika Wimmer",
         eMail: "veronika.wimmer@gmail.com"
     },
     {
         id: 12,
-        firstName: "Maximilian",
-        lastName: "Randersdorfer",
+        name: "Maximilian Randersdorfer",
         eMail: "maximilian.randersdorfer@gmail.com"
     },
 ]

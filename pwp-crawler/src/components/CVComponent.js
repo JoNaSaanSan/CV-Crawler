@@ -10,7 +10,6 @@ class CVComponent extends React.Component {
         super(props);
 
         this.state = {
-
         }
 
     }
@@ -38,12 +37,10 @@ class CVComponent extends React.Component {
             height: this.getRandomHeight() + "px"
         }
 
-        console.log(this.props.key)
-
         return (
             <div className="cv_container" style={myStyle}>
                 <h1 className="cv-name">
-                    {this.props.profile.firstName} {this.props.profile.lastName}
+                    {this.props.profile.name}
                 </h1>
             </div>
 
