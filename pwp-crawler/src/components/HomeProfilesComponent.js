@@ -1,6 +1,5 @@
 import { Button, TextField } from '@material-ui/core';
 import CVComponent from './CVComponent';
-import StackGrid from "react-stack-grid";
 import profilepic from '../profilepic.png'
 const React = require('react');
 require('./HomeProfilesComponent.css');

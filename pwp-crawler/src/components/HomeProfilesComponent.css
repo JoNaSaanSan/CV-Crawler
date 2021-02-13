@@ -11,6 +11,7 @@
 }
 
 .buttons{
+    width: 20.6%;
     border: none;
     color: black;
     padding: 20px;
@@ -19,6 +20,9 @@
     cursor: pointer;
     margin: 10px 5px;
     border-radius: 50px;
+    margin-left: -0%;
+    margin-right: 0.6%;
+    font-size: 0.9em;
 }
 
 
@@ -79,7 +83,7 @@ hr {
     margin-bottom: -5%;
 }
 
-/* Cardlayout*/
+/* Cardlayout */
 
 .cards_container{
     width: 85%;
@@ -94,5 +98,4 @@ hr {
 .column{
     width: 30%;
     height: 500px;
-    margin: 5px;
 }

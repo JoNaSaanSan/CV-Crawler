@@ -15,8 +15,11 @@
     margin: 0px 20px;
 }
 
-#title-view {
-    font-size: 1.7em;
+#logo {
+    height: 80px;
+    margin-top: 1%;
+    margin-left: 1%;
+    margin-bottom: 1%;
 }
 
 #account-view>* {
