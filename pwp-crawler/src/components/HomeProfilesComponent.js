@@ -28,7 +28,7 @@ class HomeProfilesComponent extends React.Component {
     }
 
     openPopup(i){
-        this.setState({current:{name: this.state.userInfo[i].name, cvURL: this.state.userInfo[i].cvURL, keywords: this.state.userInfo[i].keywords}})
+        this.setState({current:{name: this.state.userInfo[i].name, email: this.state.userInfo[i].email, cvURL: this.state.userInfo[i].cvURL, keywords: this.state.userInfo[i].keywords}})
         document.querySelector('.bg-modal').style.display = "flex";
         window.scrollTo(0,0)
         //disable scrolling
@@ -138,7 +138,7 @@ class HomeProfilesComponent extends React.Component {
                         <div className= "headline">
                             <h1>{this.state.current.name}</h1>
                         </div>
-                            <p>max.mustermann@gmx.de</p>
+                            <p>{this.state.current.email}</p>
                         <div className= "headline">
                             <h4>CV Website</h4>
                         </div>  
