@@ -2,7 +2,6 @@ import { Button, TextField } from '@material-ui/core';
 const React = require('react');
 require('./HomeComponent.css');
 
-
 class HeaderComponent extends React.Component {
 
     // URL of our puppeteer server 

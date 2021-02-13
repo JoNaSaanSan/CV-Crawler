@@ -1,6 +1,7 @@
 import { Button, TextField } from '@material-ui/core';
 import CVComponent from './CVComponent';
 import profilepic from '../profilepic.png'
+import MailForm from '../mail/MailForm';
 const React = require('react');
 require('./HomeProfilesComponent.css');
 
@@ -34,15 +35,22 @@ class HomeProfilesComponent extends React.Component {
         document.body.style.overflow = "hidden";
     }
 
-    closePopup(){
+    openPopup1() {
+        document.querySelector('.bg-modalMail').style.display = "flex";
+        document.body.style.overflow = "";
+
+    }
+
+    closePopup() {
         document.querySelector('.bg-modal').style.display = "none";
         //enable scrolling
         document.body.style.overflow = "auto";
     }
+
     
     getNamesFromDB(){
         // GET request
-        fetch('http://localhost:3001/getSettings').then(response => {
+        fetch('http://localhost:3001/getUsers').then(response => {
             return response.json();
           })
           .then(data => {
@@ -98,10 +106,16 @@ class HomeProfilesComponent extends React.Component {
         )))
     }
 
+    closePopup1() {
+        document.querySelector('.bg-modalMail').style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
 
     render() {
         return (
             <div className="home_container">
+
                 <div className = "buttons_container">
                     <button className = "buttons">All Profiles</button>
                     <button className = "buttons">Matched Profiles</button>
@@ -115,10 +129,12 @@ class HomeProfilesComponent extends React.Component {
                     <div id = "column4" className="column">{this.renderCards(this.state.arr3, 3)}</div>
                 </div>
 
-               <div class="bg-modal">
+
+                <div class="bg-modal">
                     <div class="modal-contents">
                         <div class="close" onClick={this.closePopup}>+</div>
                         <img className="profile-picture" src={profilepic} />
+
                         <div className= "headline">
                             <h1>{this.state.current.name}</h1>
                         </div>
@@ -132,8 +148,22 @@ class HomeProfilesComponent extends React.Component {
                             <h4>Keywords</h4>
                         </div>
                         <p>{this.state.current.keywords + ""}</p>
+                        <button onClick={this.closePopup, this.openPopup1} > Contact me </button>
+
                     </div>
                 </div>
+
+                <div class="bg-modalMail">
+                    <div class="modal-contentsMail">
+                        <div class="closeMail" onClick={this.closePopup1}>+</div>
+                        <div className="mailform">
+                            <MailForm receiverMailaddress={"max.mustermann@gmail.com"} />
+                        </div>
+                    </div>
+                </div>
+
+
+
 
             </div>
 

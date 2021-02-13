@@ -19,9 +19,14 @@ class CVComponent extends React.Component {
             backgroundColor: this.props.color,
             height: this.props.height + "px"
         }
+
+        console.log(this.props.key)
+
         return (
-            <div className="cv_container"  style={myStyle}>
-               <h1 className="cv-name">{this.props.name}</h1>
+            <div className="cv_container" style={myStyle}>
+                <h1 className="cv-name">
+                    {this.props.name}
+                </h1>
             </div>
         )
     }
