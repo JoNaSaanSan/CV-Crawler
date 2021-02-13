@@ -138,16 +138,16 @@ class HomeProfilesComponent extends React.Component {
                         <div className= "headline">
                             <h1>{this.state.current.name}</h1>
                         </div>
-                            <p>{this.state.current.email}</p>
+                            <p className= "text">{this.state.current.email}</p>
                         <div className= "headline">
                             <h4>CV Website</h4>
                         </div>  
-                        <a href= {this.state.current.cvURL} rel="noreferrer">{this.state.current.cvURL}</a>
+                        <a href= {this.state.current.cvURL} rel="noreferrer" className= "text">{this.state.current.cvURL}</a>
                         <hr/>
                         <div className= "headline">
                             <h4>Keywords</h4>
                         </div>
-                        <p>{this.state.current.keywords + ""}</p>
+                        <p className= "text">{this.state.current.keywords + ""}</p>
                         <button onClick={this.closePopup, this.openPopup1} > Contact me </button>
 
                     </div>
