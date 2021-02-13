@@ -35,6 +35,10 @@ class HomeProfilesComponent extends React.Component {
         document.body.style.overflow = "hidden";
     }
 
+    showMailingService(){
+        //document.getElementById('mailform').style.visibility = 'visible';
+    }
+
     openPopup1() {
         document.querySelector('.bg-modalMail').style.display = "flex";
         document.body.style.overflow = "";
@@ -148,19 +152,11 @@ class HomeProfilesComponent extends React.Component {
                             <h4>Keywords</h4>
                         </div>
                         <p className= "text">{this.state.current.keywords + ""}</p>
-                        <button onClick={this.closePopup, this.openPopup1} > Contact me </button>
-                        
+                        <button onClick={this.showMailingService}> Contact me </button>
+                        <MailForm receiverMailaddress={this.state.current.email} id = "mailform" visibility = 'hidden'/>
                     </div>
                 </div>
 
-                <div class="bg-modalMail">
-                    <div class="modal-contentsMail">
-                        <div class="closeMail" onClick={this.closePopup1}>+</div>
-                        <div className="mailform">
-                            <MailForm receiverMailaddress={"max.mustermann@gmail.com"} />
-                        </div>
-                    </div>
-                </div>
 
 
 

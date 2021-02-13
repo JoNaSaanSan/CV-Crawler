@@ -46,7 +46,7 @@
 }
 
 .modal-contents {
-	height: 650px;
+
 	width: 600px;
 	background-color: white;
 	text-align: center;
@@ -153,13 +153,8 @@ hr {
 
 /* Mailform */
 
-.mailform {
-  border-radius: 30px;
-  height: 30%;
-  margin-bottom: 20cm;
-  margin-top: 0cm;
-  padding-bottom: 30cm;
-  padding-top: 0cm;
+#mailform {
+  visibility: hidden;
 }
 
 .btnContactMe {
