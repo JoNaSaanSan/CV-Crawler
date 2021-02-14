@@ -123,4 +123,18 @@ cvIO.route('/setMatches').post((req, res) => {
 
 })
 
+/**
+ * Get the matches for a specific cv
+ */
+cvIO.route('/getMatches').get((req, res) => {
+    const name = req.body.name;
+    console.log(name);
+   // const matches = req.body.matches;
+   // const cvURL = req.body.cvURL;
+    CV.findOne({ "name": name }, function (err, foundCV) {
+        console.log(foundCV);
+        res.json(foundCV)
+    })
+})
+
 module.exports = cvIO;

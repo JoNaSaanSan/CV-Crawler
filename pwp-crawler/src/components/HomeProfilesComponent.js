@@ -2,6 +2,7 @@ import { Button, TextField } from '@material-ui/core';
 import CVComponent from './CVComponent';
 import profilepic from '../profilepic.png'
 import MailForm from '../mail/MailForm';
+import axios from 'axios';
 const React = require('react');
 require('./HomeProfilesComponent.css');
 
@@ -12,6 +13,7 @@ class HomeProfilesComponent extends React.Component {
         super(props);
 
         this.state = {
+            name: localStorage.getItem('Name'),
             userInfo: [], 
             arr0: [], //column 1
             arr1: [], //column 2
@@ -19,12 +21,28 @@ class HomeProfilesComponent extends React.Component {
             arr3: [], //column 4
             current: {name: "", email: "", cvURL: "", keywords: ""} //data for pop-up
         }
-        this.getNamesFromDB = this.getNamesFromDB.bind(this)
+        this.getNamesFromDB = this.getNamesFromDB.bind(this);
+        this.showMatchedProfiles = this.showMatchedProfiles.bind(this);
     }
 
      // Called when window is loaded
     componentDidMount() {
         this.getNamesFromDB();
+    }
+
+    showMatchedProfiles(){
+        const name = this.state.name;
+      
+        // GET request
+        axios.get('https://pwp.um.ifi.lmu.de/g05/getMatches', name).then(response => {
+            return response.json();
+          })
+          .then(data => { this.setState({userInfo: this.allocateColorHeight(data)}, () => this.showMyCards())
+        })
+        .catch(error => {
+          console.log(error);
+        });
+        
     }
 
     openPopup(i){
@@ -126,7 +144,7 @@ class HomeProfilesComponent extends React.Component {
             <div className="home_container">
                 <div className = "buttons_container">
                     <button className = "buttons">All Profiles</button>
-                    <button className = "buttons">Matched Profiles</button>
+                    <button className = "buttons" onClick={this.showMatchedProfiles}>Matched Profiles</button>
                </div>
             
                

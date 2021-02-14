@@ -159,7 +159,6 @@ const activateCrawler = async (userCVs) => {
  .then((res) =>{
      console.log(`statuscode: ${res.statuscode}`)
      console.log(res)
-     //alle newInfo wieder auf false setzen? 
  })
  .catch((error) =>{
      console.error(error)
