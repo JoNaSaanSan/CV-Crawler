@@ -5,16 +5,16 @@ import axios from "axios"
 
 export class MailForm extends Component {
 
-    constructor(props) {
-        super(props)
+    constructor() {
+        super()
 
         this.state = {
             firstName: "",
             lastName: "",
             senderMailaddress: "",
-            receiverMailaddress: this.props.receiverMailaddress,
             message: "",
         }
+
 
         this.formSubmit = this.formSubmit.bind(this)
 
@@ -31,7 +31,6 @@ export class MailForm extends Component {
     handleLastName = (e) => {
         this.setState({
             lastName: e.target.value
-
         })
     }
 
@@ -39,7 +38,6 @@ export class MailForm extends Component {
     handleSenderMail = (e) => {
         this.setState({
             senderMailaddress: e.target.value
-
         })
     }
 
@@ -47,7 +45,6 @@ export class MailForm extends Component {
     handleReceiverMail = (e) => {
         this.setState({
             receiverMailaddress: e.target.value
-
         })
     }
 
@@ -69,7 +66,7 @@ export class MailForm extends Component {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             senderMailaddress: this.state.senderMailaddress,
-            receiverMailaddress: this.state.receiverMailaddress,
+            receiverMailaddress: this.props.receiverMailaddress,
             message: this.state.message
         }
 
@@ -99,7 +96,6 @@ export class MailForm extends Component {
             firstName: "",
             lastName: "",
             senderMailaddress: "",
-            // receiverMailaddress: "",
             message: "",
         })
     }
@@ -155,7 +151,6 @@ export class MailForm extends Component {
                             className="email"
                             placeholder="Target email"
                             value={this.props.receiverMailaddress}
-                            onChange={""}
                             required
                         />
                     </div>

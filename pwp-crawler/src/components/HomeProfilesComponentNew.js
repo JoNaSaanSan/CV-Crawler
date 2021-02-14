@@ -16,42 +16,41 @@ class HomeProfilesComponent extends React.Component {
         super(props);
 
         this.state = {
-            firstName: "",
-            lastName: "",
+            name: "",
             eMail: ""
         }
+
+        this.openPopupMail = this.openPopupMail.bind(this)
     }
 
+
+    // Opens first PopUp window with the profile of the CV owner  
     openPopup(e) {
         document.querySelector('.bg-modal').style.display = "flex";
         document.body.style.overflow = "";
         this.setState({
-            firstName: e.firstName,
-            lastName: e.lastName,
+            name: e.name,
             eMail: e.eMail
         })
-
     }
 
+    // Opens second PopUp window to contact the profile
     openPopupMail() {
         document.querySelector('.bg-modalMail').style.display = "flex";
         document.body.style.overflow = "";
-
     }
 
+    // Closes first PopUp window 
     closePopup() {
         document.querySelector('.bg-modal').style.display = "none";
         document.body.style.overflow = "auto";
     }
 
+    // Closes second PopUp window 
     closePopupMail() {
         document.querySelector('.bg-modalMail').style.display = "none";
         document.body.style.overflow = "auto";
     }
-
-
-
-
 
 
     render() {
@@ -65,15 +64,11 @@ class HomeProfilesComponent extends React.Component {
         ));
 
 
-
-        // console.log(profilesData)
-
         return (
             <div className="home_container">
                 <div className="buttons_container">
                     <button className="buttons">All Profiles</button>
                     <button className="buttons">Matched Profiles</button>
-                    {/* <div>{profileComponents}</div> */}
                 </div>
 
                 <StackGrid columnWidth={350}
@@ -82,11 +77,8 @@ class HomeProfilesComponent extends React.Component {
                     <div
                         key={profilesData.id}
                         className="cv-element"
-                    // onClick={this.openPopup}
                     >
-
                         {profileComponents}
-
                     </div>
                 </StackGrid>
 
@@ -94,7 +86,7 @@ class HomeProfilesComponent extends React.Component {
                     <div class="modal-contents">
                         <div class="close" onClick={this.closePopup}>+</div>
                         <img className="profile-picture" src={profilepic} />
-                        <h1>{this.state.firstName} {this.state.lastName}</h1>
+                        <h1>{this.state.name}</h1>
                         <p>{this.state.eMail}</p>
                         <a target="_blank" href="http://google.de">CV Website</a>
                         <hr />
@@ -107,7 +99,9 @@ class HomeProfilesComponent extends React.Component {
                     <div class="modal-contentsMail">
                         <div class="closeMail" onClick={this.closePopupMail}>+</div>
                         <div className="mailform">
-                            <MailForm receiverMailaddress={this.state.eMail} />
+                            <MailForm
+                                receiverMailaddress={this.state.eMail}
+                            />
                         </div>
                     </div>
                 </div>
