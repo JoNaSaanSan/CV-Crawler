@@ -5,7 +5,7 @@ require('./HomeComponent.css');
 class HeaderComponent extends React.Component {
 
     // URL of our puppeteer server 
-    URL = 'http://localhost:3001/'
+    URL = 'https://pwp.um.ifi.lmu.de/g05/'
 
     constructor(props) {
         super(props);

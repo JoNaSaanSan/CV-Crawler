@@ -60,7 +60,7 @@ class HomeProfilesComponent extends React.Component {
     
     getNamesFromDB(){
         // GET request
-        fetch('http://localhost:3001/getUsers').then(response => {
+        fetch('https://pwp.um.ifi.lmu.de/g05/getUsers').then(response => {
             return response.json();
           })
           .then(data => {

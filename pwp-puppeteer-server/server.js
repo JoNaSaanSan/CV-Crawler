@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
 
 
 // Use this request to retrieve Text from a website
-// e.g. curl http://localhost:3001/retrieveHTMLRAW?url=https://www.google.de
+// e.g. curl https://pwp.um.ifi.lmu.de/g05/retrieveHTMLRAW?url=https://www.google.de
 app.get('/retrieveHTMLRaw', (req, res) => {
     crawl(req.query.url).then(result => res.send(result)).catch(console.error);
     console.log("Received Request")

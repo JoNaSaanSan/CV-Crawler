@@ -89,7 +89,7 @@ handleDownload = (event) => {
             email: this.state.email,
             url: this.state.url
         }
-    axios.post('http://localhost:3001/downloadCV', downloadCV) //send POST-request to /downloadCV
+    axios.post('https://pwp.um.ifi.lmu.de/g05/downloadCV', downloadCV) //send POST-request to /downloadCV
     .then(res=>{ console.log(res.data)})
     .then(alert("Just a moment..")) //because this takes longer then you would expect
     .then(() => axios.get('/fetch-pdf', { responseType: 'blob' })) //sends GET-request in order to fetch the actual PDF
@@ -111,7 +111,7 @@ handleDelete = (event) => {
         email: this.state.email,
         url: this.state.url
     }
-    axios.post('http://localhost:3001/deleteUser', deleteUser).then(res=>{ //send POST-request to /deleteUser
+    axios.post('https://pwp.um.ifi.lmu.de/g05/deleteUser', deleteUser).then(res=>{ //send POST-request to /deleteUser
         console.log(res.data)
         if(res.data.message === "User deleted successfully"){ //if success
             alert("Your Account was deleted. If you want to rejoin you need to register again."); //Inform the user about the fact that he deleted his account
@@ -136,7 +136,7 @@ handleRegistration = (event) =>{
         url: this.state.url,
         newInfo: true
     }
-    axios.post('http://localhost:3001/userRegistration',userRegistration).then(res=>{ //send POST-request to /userRegistration
+    axios.post('https://pwp.um.ifi.lmu.de/g05/userRegistration',userRegistration).then(res=>{ //send POST-request to /userRegistration
         console.log(res.data)
         if(res.data.message === "Field empty!"){
             alert("You need to Sign In with Google and fill out the Name and CVURL field!");
@@ -173,7 +173,7 @@ handleLogin = (event) =>{
         url: this.state.url,
         newInfo: false
     }
-    axios.post('http://localhost:3001/userLogin',userLogin).then(res=>{
+    axios.post('https://pwp.um.ifi.lmu.de/g05/userLogin',userLogin).then(res=>{
         console.log(res.data)
         if(res.data.message === "Field empty!"){
             alert("You need to Sign In with Google and fill out the Name and CVURL field!");
@@ -231,7 +231,7 @@ saveSettings = (event) => {
             emailLimit: this.state.emailLimit,
             newInfo: true,
         }
-        axios.post('http://localhost:3001/updateSettings', userSettings).then(res=>{ //sends the post-request with the user settings to /updateSettings
+        axios.post('https://pwp.um.ifi.lmu.de/g05/updateSettings', userSettings).then(res=>{ //sends the post-request with the user settings to /updateSettings
         console.log(res.data)
         if(res.data.message === "Settings saved successfully"){
             alert("Your Settings were saved successfully!");

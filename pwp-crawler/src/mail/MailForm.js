@@ -76,7 +76,7 @@ export class MailForm extends Component {
         // Using axios to post the mail data
         axios({
             method: "POST",
-            url: "http://localhost:3001/contact",
+            url: "https://pwp.um.ifi.lmu.de/g05/contact",
             data: mailData,
             validateStatus: false
         }).then((response) => {
