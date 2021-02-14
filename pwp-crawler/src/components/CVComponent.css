@@ -1,8 +1,16 @@
-.cv_container{
-    border-radius: 30px;
+.cv_container {
+  border-radius: 30px;
+  margin-bottom: 10px;
 }
+/* 
+names in box centered
+  display: flex;
+  align-items: center;
+  justify-content: center;
+*/
 
-.cv-name{
-    text-align: center;
-    font-size: 100%;
+.cv-name {
+  text-align: center;
+  font-size: 140%;
+  font-weight: 150;
 }

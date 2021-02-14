@@ -53,7 +53,7 @@ userIO.route('/userRegistration').post((req, res) => {
                         newUser.save()
                             .then(newUser => {
                                 res.json({ message: "User saved successfully" }) //returns success msg after successfully saving the user
-                                User.find({newInfo: true})
+                                 User.find({newInfo: true})
                                  .then(foundUsers => manageCVs(foundUsers))
                                  .then(getCVsToCrawl)
                                  .then(cvs => activateCrawler(cvs))

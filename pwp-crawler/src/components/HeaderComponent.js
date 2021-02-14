@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import store from '../redux/store';
+import logo from '../branding.png';
 const React = require('react');
 require('./HeaderComponent.css');
 
@@ -22,9 +23,9 @@ class HeaderComponent extends React.Component {
     return (
       <div className="header-view">
 
-        <div id="title-view">
-          CV Crawler
-        </div>
+        
+        <img src={logo} id= "logo"/>
+        
 
         <div id="account-view">
           <Link to="/" className="menu-item">

@@ -1,31 +1,34 @@
 .header-view {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #eeeeee;
-    color: rgb(0, 0, 0);
-    padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #eeeeee;
+  color: rgb(0, 0, 0);
+  padding: 10px;
 }
 
 #account-view {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 20px;
 }
 
-#title-view {
-    font-size: 1.7em;
+#logo {
+  height: 80px;
+  margin-top: 1%;
+  margin-left: 1%;
+  margin-bottom: 1%;
 }
 
-#account-view>* {
-    margin: 10px;
+#account-view > * {
+  margin: 10px;
 }
 
-.menu-item{
-    color: rgb(0, 0, 0);
-    text-decoration: none; /* no underline */
-    cursor: pointer;
-    font-size: 1.2em;
+.menu-item {
+  color: rgb(0, 0, 0);
+  text-decoration: none; /* no underline */
+  cursor: pointer;
+  font-size: 1.2em;
 }
