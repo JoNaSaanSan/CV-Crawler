@@ -235,7 +235,7 @@ saveSettings = (event) => {
         console.log(res.data)
         if(res.data.message === "Settings saved successfully"){
             alert("Your Settings were saved successfully!");
-            axios.post('/getUserSettings', userSettings ).then(res =>{ //fetches the current user settings
+            axios.post('https://pwp.um.ifi.lmu.de/g05/getUserSettings', userSettings ).then(res =>{ //fetches the current user settings
                 console.log(res.data);
                 this.setState({keywords: res.data.keywords, emailLimit: res.data.emailLimit}); //and saves them to the state
                 localStorage.setItem('Keywords',JSON.stringify(res.data.keywords)); //and also to the local storage
