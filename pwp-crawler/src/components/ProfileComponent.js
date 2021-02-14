@@ -92,7 +92,7 @@ handleDownload = (event) => {
     axios.post('https://pwp.um.ifi.lmu.de/g05/downloadCV', downloadCV) //send POST-request to /downloadCV
     .then(res=>{ console.log(res.data)})
     .then(alert("Just a moment..")) //because this takes longer then you would expect
-    .then(() => axios.get('/fetch-pdf', { responseType: 'blob' })) //sends GET-request in order to fetch the actual PDF
+    .then(() => axios.get('https://pwp.um.ifi.lmu.de/g05/fetch-pdf', { responseType: 'blob' })) //sends GET-request in order to fetch the actual PDF
       .then((res) => {
         const pdfBlob = new Blob([res.data], { type: 'application/pdf' }); //A file-like object of immutable, raw data. Blobs represent data that isn't necessarily in a JavaScript-native format.
         saveAs(pdfBlob, 'myCV.pdf'); //show save file as dialogue
@@ -186,7 +186,7 @@ handleLogin = (event) =>{
                 loggedIn: true
             })
             alert("You are successfully logged in!");
-            axios.post('/getUserSettings', userLogin ).then(res =>{ //fetches the current user settings
+            axios.post('https://pwp.um.ifi.lmu.de/g05/getUserSettings', userLogin ).then(res =>{ //fetches the current user settings
                 console.log(res.data);
                 this.setState({keywords: res.data.keywords, emailLimit: res.data.emailLimit});
                 localStorage.setItem('Keywords',JSON.stringify(res.data.keywords));
