@@ -243,6 +243,7 @@ class ProfileComponent extends React.Component {
                     this.setState({ keywords: res.data.keywords, emailLimit: res.data.emailLimit }); //and saves them to the state
                     localStorage.setItem('Keywords', JSON.stringify(res.data.keywords)); //and also to the local storage
                     localStorage.setItem('emailLimit', res.data.emailLimit);
+                    localStorage.setItem('cvURL', res.data.cvURL);
 
                 })
             } else {
