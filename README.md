@@ -1,31 +1,6 @@
-# Pwp User Management
-
-Milestone 1:
-
-To Do:
-- [x] Create Github
-- [x] Create React-App 
-- [x] Databank aufsetzen
-- [x] Server-side-rendering + next.js/pre-rendereing implementation
-- [x] User Login / Registration (UI) 
-- [ ]     Authentication
-- [ ]     URL of CV
+This project was for a university course, where we developed a crawler for cv websites. Our group was responsible for the front-end design, user management and seo.
 
 
-
-
-Milestone2: 
-- [ ] User Daten mit Datenbank synchronisieren
-- [ ] Pass the server-side-rendered site further?
-- [ ] Get the URL of a CVs / Retrieve URLs of CVs?
-- [ ] Profile Settings
-- [ ] Add Notifications / Mailer 
-- [ ] Make stuff pretty
-
------------------------------------------
-
-
-// react
 cd pwp-crawler 
 npm install (Install dependancies)
 npm start (React app should start)
